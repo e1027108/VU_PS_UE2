@@ -8,15 +8,16 @@ Created on 20. Juni 2016
 import abc
 
 class Component():
-    inputString = "" #here we want to get the input
+    def __init__(self,input):
+        self.__input = input
     
-    @inputString.setter
+    @input.setter
     def setInput(self,input):
-        self.inputString = input
+        self.__input = input
        
-    @inputString.getter 
+    @input.getter 
     def getInput(self):
-        return self.inputString
+        return self.__input
     
     @abc.abstractmethod
     def checkSyntax(self):
