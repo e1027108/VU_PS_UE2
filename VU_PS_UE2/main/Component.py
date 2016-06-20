@@ -7,7 +7,7 @@ Created on 20. Juni 2016
 
 import abc
 
-class Component():
+class Component(object):
     def __init__(self,input):
         self.__input = input
     
