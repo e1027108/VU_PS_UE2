@@ -3,7 +3,7 @@ Created on 21. Juni 2016
 
 @author: #put your name here
 '''
-import Component
+from __main__ import Component
 
 class Guard(Component):
     

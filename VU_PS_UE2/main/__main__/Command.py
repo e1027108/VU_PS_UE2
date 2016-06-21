@@ -3,7 +3,7 @@ Created on 20. Juni 2016
 
 @author: patrick.bellositz
 '''
-import Component
+from __main__ import Component
 
 class Command(Component):
     

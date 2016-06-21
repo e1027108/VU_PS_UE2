@@ -1,11 +1,11 @@
 '''
-Created on 20. Juni 2016
+Created on 21. Juni 2016
 
-@author: patrick.bellositz
+@author: #put your name here
 '''
-import Component
+from __main__ import Component
 
-class Block(Component):
+class Expression(Component):
     
     def __init__(self,input):
         super().__init__(self,input)
