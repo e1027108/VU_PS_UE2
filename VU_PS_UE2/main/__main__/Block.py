@@ -11,24 +11,12 @@ class Block(Component):
     def __init__(self,input):
         super().__init__(self,input)
     
-    def checkSyntax(self): #no clue how to deal with comments like this code to interpret yet
-        for x in range(0,len(self.input)-1):
-            if input[x] is ' ':
-                continue
-            elif input[x] is '{':
-                open = x
-                break
-            else:
-                return False
+    def checkSyntax(self): #no clue how to deal with comments (like this) yet
+        test = self.input.lstrip()
+        test = test.rstrip()
         
-        for x in range(len(self.input)-1,0,-1):#supposed to count -1 each step now
-            if input[x] is ' ':
-                continue
-            elif input[x] is '}':
-                close = x
-                break
-            else:
-                return False
-        
-        c = Command(self.input[open+1:close-1])#supposed to put though everything between {}
-        return c.checkSyntax()
+        if (test[0] is '{') and (test[len(test)-1] is '}'):
+            c = Command(test[1:len(test)-2])#supposed to put though everything between {}
+            return c.checkSyntax()
+        else:
+            return False
