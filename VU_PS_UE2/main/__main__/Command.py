@@ -5,6 +5,7 @@ Created on 20. Juni 2016
 '''
 from __main__ import Component
 from __main__ import Expression
+from __main__ import Guard
 
 class Command(Component):
     
@@ -23,20 +24,30 @@ class Command(Component):
         elif test[len(test)-1] is ';':
             return self.checkAssignmentPart(test[:len(test)-2])#TODO check in this method for '*'
         else:
-            return False#TODO replace False with Exceptions? use boolean return type at all?
+            return False #TODO replace False with Exceptions? use boolean return type at all?
         
     def checkGuardPart(self,part):
         test = part.lstrip()
         test = test.rstrip()
+        openGuardCount = 0
+        colonIndex = -1
         
-        '''
-        TODO since guard as well as expression can both contain ':'
-        we can't just look for a ':', but rather we need to
-        check every combination of x : y whether or not
-        it passes syntax checks for guard : expression ???
-        '''
+        for x in range(0,len(test)-1):
+            if (x is ':') and (openGuardCount == 0):
+                colonIndex = x
+                break
+            elif x is '[':
+                openGuardCount += 1
+            elif x is ']':
+                openGuardCount -= 1
+                
+        if colonIndex == -1:
+            return False
         
-        pass
+        g = Guard(test[:colonIndex-1])
+        e = Expression(test[colonIndex+1:])
+        
+        return (g.checkSyntax() and e.checkSyntax())
         
     def checkAssignmentPart(self,part):
         test = part.lstrip()
@@ -57,7 +68,10 @@ class Command(Component):
         right = test[equalsIndex+1:]
         e = Expression(right)
         
-        return (self.checkNamePart(left) and e.checkSyntax())
+        if e.checkSyntax() and (self.checkNamePart(left) or (equalsIndex == -1)):
+            return True
+        else:
+            return False
     
     def checkNamePart(self,part):
         test = part.lstrip()
