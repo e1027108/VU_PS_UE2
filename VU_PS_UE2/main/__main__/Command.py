@@ -16,12 +16,12 @@ class Command(Component):
         test = self.input.lstrip()
         test = test.rstrip() #removing leading then trailing whitespaces
         
-        if test[0] is '[' and test[len(test)-1] is ']':
+        if test[0] == '[' and test[len(test)-1] == ']':
             return self.checkGuardPart(test[1:len(test)-1])
-        elif test[0] is '^' and test[len(test)-1] is ';':
+        elif test[0] == '^' and test[len(test)-1] == ';':
             e = Expression(test[1:len(test)-1]) #pass to Expression without '^' and ';'
             return e.checkSyntax()
-        elif test[len(test)-1] is ';':
+        elif test[len(test)-1] == ';':
             return self.checkAssignmentPart(test[:len(test)-1])#TODO check in this method for '*'
         else:
             return False #TODO replace False with Exceptions? use boolean return type at all?
@@ -33,12 +33,12 @@ class Command(Component):
         colonIndex = -1
         
         for x in range(0,len(test)):
-            if (x is ':') and (openGuardCount == 0):
+            if (x == ':') and (openGuardCount == 0):
                 colonIndex = x
                 break
-            elif x is '[':
+            elif x == '[':
                 openGuardCount += 1
-            elif x is ']':
+            elif x == ']':
                 openGuardCount -= 1
                 
         if colonIndex == -1:
@@ -57,7 +57,7 @@ class Command(Component):
         equalsIndex = test.index('=') #returns index of leftmost '='
         
         for x in range(0,len(test)):
-            if test[x] is '*':
+            if test[x] == '*':
                 continue
             else:
                 noPointerIndex = x
