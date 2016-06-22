@@ -16,7 +16,7 @@ class Block(Component):
         test = test.rstrip()
         
         if (test[0] is '{') and (test[len(test)-1] is '}'):
-            c = Command(test[1:len(test)-2])#supposed to put though everything between {}
+            c = Command(test[1:len(test)-1])#supposed to put though everything between {}
             return c.checkSyntax()
         else:
             return False

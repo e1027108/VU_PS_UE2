@@ -17,12 +17,12 @@ class Command(Component):
         test = test.rstrip() #removing leading then trailing whitespaces
         
         if test[0] is '[' and test[len(test)-1] is ']':
-            return self.checkGuardPart(test[1:len(test)-2])
+            return self.checkGuardPart(test[1:len(test)-1])
         elif test[0] is '^' and test[len(test)-1] is ';':
-            e = Expression(test[1:len(test)-2]) #pass to Expression without '^' and ';'
+            e = Expression(test[1:len(test)-1]) #pass to Expression without '^' and ';'
             return e.checkSyntax()
         elif test[len(test)-1] is ';':
-            return self.checkAssignmentPart(test[:len(test)-2])#TODO check in this method for '*'
+            return self.checkAssignmentPart(test[:len(test)-1])#TODO check in this method for '*'
         else:
             return False #TODO replace False with Exceptions? use boolean return type at all?
         
@@ -32,7 +32,7 @@ class Command(Component):
         openGuardCount = 0
         colonIndex = -1
         
-        for x in range(0,len(test)-1):
+        for x in range(0,len(test)):
             if (x is ':') and (openGuardCount == 0):
                 colonIndex = x
                 break
@@ -44,7 +44,7 @@ class Command(Component):
         if colonIndex == -1:
             return False
         
-        g = Guard(test[:colonIndex-1])
+        g = Guard(test[:colonIndex])
         e = Expression(test[colonIndex+1:])
         
         return (g.checkSyntax() and e.checkSyntax())
@@ -56,14 +56,14 @@ class Command(Component):
         
         equalsIndex = test.index('=') #returns index of leftmost '='
         
-        for x in range(0,len(test)-1):
+        for x in range(0,len(test)):
             if test[x] is '*':
                 continue
             else:
                 noPointerIndex = x
                 break
         
-        left = test[noPointerIndex:equalsIndex-1]
+        left = test[noPointerIndex:equalsIndex]
         
         right = test[equalsIndex+1:]
         e = Expression(right)
