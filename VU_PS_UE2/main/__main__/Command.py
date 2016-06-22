@@ -45,9 +45,9 @@ class Command(Component):
             return False
         
         g = Guard(test[:colonIndex])
-        e = Expression(test[colonIndex+1:])
+        c = Command(test[colonIndex+1:])
         
-        return (g.checkSyntax() and e.checkSyntax())
+        return (g.checkSyntax() and c.checkSyntax())
         
     def checkAssignmentPart(self,part):
         test = part.lstrip()
