@@ -16,12 +16,12 @@ class Command(Component):
         test = self.input.lstrip()
         test = test.rstrip()
         
-        #TODO check here if it is multiple or a single command
         oBI = 0 #openBracketIndex
         oPNI = 0 #openPointerOrNameIndex
         oPI = 0 #openPrintIndexx
         openBrackets = 0
         
+        # is there an easier way than this huge loop?
         for x in range(0,len(test)):
             if (oPI == 0) and (oPNI == 0) and (oBI == 0):
                 if test[x] == '[':
@@ -29,8 +29,11 @@ class Command(Component):
                     openBrackets += 1
                 elif test[x] == '^':
                     oPI = x
-                elif (test[x] == '*') or test[x].isalpha(): #TODO support expressions without assignment
+                elif (test[x] == '*') or (test[x] == '"') or (test[x] == '(') or test[x].isalpha():#TODO check
                     oPNI = x
+                elif (test[x] == '{'):#TODO check
+                    oPNI = x
+                    openBrackets += 1
             elif not (oBI == 0):
                 if test[x] == '[':
                     openBrackets += 1

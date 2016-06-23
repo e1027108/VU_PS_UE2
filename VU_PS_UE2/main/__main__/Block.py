@@ -11,7 +11,7 @@ class Block(Component):
     def __init__(self,input):
         super().__init__(self,input)
     
-    def checkSyntax(self): #TODO remove all comments before checking syntax?
+    def checkSyntax(self):
         test = self.input.lstrip()
         test = test.rstrip()
         
