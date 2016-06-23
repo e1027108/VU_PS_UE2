@@ -20,7 +20,7 @@ class Guard(Component):
         guardIndex = 0
         
                
-        for x in range(0, len(str)):
+        for x in range(0, len(test)):
             if ((x == '=') or (x == '#')):
                 e1 = Expression(test[:x-1])
                 expIndex = x+1
