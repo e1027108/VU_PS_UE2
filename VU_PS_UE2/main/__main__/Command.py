@@ -123,20 +123,7 @@ class Command(Component):
         right = test[equalsIndex+1:]
         e = Expression(right)
         
-        if e.checkSyntax() and (self.checkNamePart(left) or (equalsIndex == -1)):
+        if e.checkSyntax() and (self.checkName(left) or (equalsIndex == -1)):
             return True
         else:
             return False
-    
-    def checkNamePart(self,part):
-        test = part.lstrip()
-        test = test.rstrip()
-        
-        if not (test[0].isalpha()):
-            return False
-        else:
-            for x in range(1,len(test)):
-                if not (test[x].isalpha() or test[x].isdigit()):
-                    return False
-                
-        return True

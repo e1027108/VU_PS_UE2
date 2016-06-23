@@ -22,3 +22,16 @@ class Component(object):
     @abc.abstractmethod
     def checkSyntax(self):
         return
+    
+    def checkName(self,part):
+        test = part.lstrip()
+        test = test.rstrip()
+        
+        if not (test[0].isalpha()):
+            return False
+        else:
+            for x in range(1,len(test)):
+                if not (test[x].isalpha() or test[x].isdigit()):
+                    return False
+                
+        return True
