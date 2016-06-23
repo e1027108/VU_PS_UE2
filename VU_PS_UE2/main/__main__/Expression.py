@@ -48,8 +48,8 @@ class Expression(Component):
         
     def checkPart1(self, test):
         
-        if (test[0] == '"' and test[len(test)-1]):
-            return self.checkStringLiteral(test)
+        if (test[0] == '"' and test[len(test)-1] == '"'):
+            return self.checkStringLiteral(test)            # write checkStringLiteral()
         elif (test[0] == '{' and test[len(test)-1] == '}'):
             b = Block(test[1:len(test)-1])
             return b.checkSyntax()
