@@ -14,17 +14,72 @@ class Command(Component):
     
     def checkSyntax(self):
         test = self.input.lstrip()
-        test = test.rstrip() #removing leading then trailing whitespaces
+        test = test.rstrip()
         
+        oBI = 0 #openBracketIndex
+        oPNI = 0 #openPointerOrNameIndex
+        oPI = 0 #openPrintIndexx
+        openBrackets = 0
+        
+        # is there an easier way than this huge loop?
+        for x in range(0,len(test)):
+            if (oPI == 0) and (oPNI == 0) and (oBI == 0):
+                if test[x] == '[':
+                    oBI = x
+                    openBrackets += 1
+                elif test[x] == '^':
+                    oPI = x
+                elif (test[x] == '*') or (test[x] == '"') or (test[x] == '(') or test[x].isalpha():#TODO check
+                    oPNI = x
+                elif (test[x] == '{'):#TODO check
+                    oPNI = x
+                    openBrackets += 1
+            elif not (oBI == 0):
+                if test[x] == '[':
+                    openBrackets += 1
+                elif test[x] == ']':
+                    if openBrackets == 1:
+                        if not self.checkGuardPart(test[oBI:x]):
+                            return False
+                        else:
+                            oBI = 0
+                    openBrackets -= 1
+            elif not (oPI == 0):
+                if test[x] == '{':
+                    openBrackets += 1
+                elif test[x] == '}':
+                    openBrackets -= 1
+                elif (openBrackets == 0) and (test[x] == ';'):
+                    e = Expression(test[oPI:x])
+                    if not e.checkSyntax():
+                        return False
+                    else:
+                        oPI = 0
+            elif not (oPNI == 0):
+                if test[x] == '{':
+                    openBrackets += 1
+                elif test[x] == '}':
+                    openBrackets -= 1
+                elif (openBrackets == 0) and (test[x] == ';'):
+                    e = Expression(test[oPNI:x])
+                    if not e.checkSyntax():
+                        return False
+                    else:
+                        oPNI = 0              
+                
+        return True
+        
+        ''' old code:
         if test[0] == '[' and test[len(test)-1] == ']':
             return self.checkGuardPart(test[1:len(test)-1])
         elif test[0] == '^' and test[len(test)-1] == ';':
-            e = Expression(test[1:len(test)-1]) #pass to Expression without '^' and ';'
+            e = Expression(test[1:len(test)-1])
             return e.checkSyntax()
         elif test[len(test)-1] == ';':
-            return self.checkAssignmentPart(test[:len(test)-1])#TODO check in this method for '*'
+            return self.checkAssignmentPart(test[:len(test)-1])
         else:
             return False #TODO replace False with Exceptions? use boolean return type at all?
+        '''
         
     def checkGuardPart(self,part):
         test = part.lstrip()
