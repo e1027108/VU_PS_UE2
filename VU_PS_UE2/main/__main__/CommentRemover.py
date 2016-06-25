@@ -14,11 +14,11 @@ def removeComments(input):
         elif (input[x] == '\n') and not (commentIndex == -1):
             input = input.replace(input[commentIndex:x],"") #should leave the line break
             #print "newinput: " + input
-            input = input[:commentIndex] + removeComments(input[commentIndex+1:]) #should now remove comments from rest
+            input = input[:commentIndex+1] + removeComments(input[commentIndex+1:]) #should now remove comments from rest
             #print "new2input: " + input
             break
         
     return input
 
-#string = "test test test %test test 3 4 5\n test again again again%comment more comment more 2 3 4\n testing ends"
-#print removeComments(string)
+string = "test test test %test test 3 4 5\n test again again again%comment more comment more 2 3 4\n testing ends"
+print removeComments(string)
