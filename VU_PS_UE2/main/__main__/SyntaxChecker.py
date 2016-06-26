@@ -10,8 +10,6 @@ from Block import Block
 def checkSyntax(path):
     with open (path, "r") as myfile:
         data=myfile.read()
-    
-    #print data
 
     data = removeComments(data)
 

@@ -61,7 +61,7 @@ class Command(Component):
                 elif test[x] == '}':
                     openBrackets -= 1
                 elif (openBrackets == 0) and (test[x] == ';'):
-                    e = Expression(test[oPNI:x])
+                    e = Expression(test[oPNI-1:x])
                     if not e.checkSyntax():
                         return False
                     else:

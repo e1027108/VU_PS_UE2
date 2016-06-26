@@ -10,7 +10,7 @@
             ^ { a = *a; b = *c; c = *b; } + *max;
         ]
         ^ "error";
-    };%decomment?
+    } ; %decomment?
     result = { a = "12"; b = "27"; c = "18"; } + max;
     {} + ("echo " + result).syscall;
     {} + ("echo " + ({ a = "-12"; b = "-27"; } + max)).syscall;
