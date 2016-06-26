@@ -3,14 +3,14 @@ Created on 20. Juni 2016
 
 @author: patrick.bellositz
 '''
-from __main__ import Component
-from __main__ import Expression
-from __main__ import Guard
+from Component import Component
+from Expression import Expression
+from Guard import Guard
 
 class Command(Component):
     
     def __init__(self,input):
-        super().__init__(self,input)
+        super(Command,self).__init__(input)
     
     def checkSyntax(self):
         test = self.input.lstrip()

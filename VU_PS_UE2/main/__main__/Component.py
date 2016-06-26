@@ -9,15 +9,13 @@ import abc
 
 class Component(object):
     def __init__(self,input):
-        self.__input = input
+        self.input = input
     
-    @input.setter
     def setInput(self,input):
-        self.__input = input
-       
-    @input.getter 
+        self.input = input
+    
     def getInput(self):
-        return self.__input
+        return self.input
     
     @abc.abstractmethod
     def checkSyntax(self):

@@ -3,13 +3,13 @@ Created on 21. Juni 2016
 
 @author: raidsnail
 '''
-from __main__ import Component
-from __main__ import Expression
+from Component import Component
+from Expression import Expression
 
 class Guard(Component):
     
     def __init__(self,input):
-        super().__init__(self,input)
+        super(Guard,self).__init__(input)
         
     def checkSyntax(self):
         

@@ -3,14 +3,13 @@ Created on 21. Juni 2016
 
 @author: raidsnail
 '''
-from __main__ import Component
-from __main__ import Block
-
+from Component import Component
+import Block
 
 class Expression(Component):
     
     def __init__(self,input):
-        super().__init__(self,input)
+        super(Expression,self).__init__(input)
         
     def checkSyntax(self):
         
