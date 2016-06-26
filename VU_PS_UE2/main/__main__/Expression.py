@@ -3,14 +3,14 @@ Created on 21. Juni 2016
 
 @author: raidsnail
 '''
-from Component import Component
-import Block
+from Component import Component   
 
 class Expression(Component):
     
     def __init__(self,input):
         super(Expression,self).__init__(input)
         
+
     def checkSyntax(self):
         
         test = self.input.lstrip()
@@ -89,6 +89,8 @@ class Expression(Component):
             return self.checkStringLiteral(test)
         elif (test[0] == '{' and test[len(test)-1] == '}'):
             # this is a block
+            from Block import Block
+            #print test[1:len(test)-1]
             b = Block(test[1:len(test)-1])
             return b.checkSyntax()            
         elif (test[0] == '(' and test[len(test)-1] == ')'):
