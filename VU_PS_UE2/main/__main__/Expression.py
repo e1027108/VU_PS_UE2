@@ -63,7 +63,11 @@ class Expression(Component):
                     part2 = test[x+1:]
                     if "." in part2:
                         dotIndex = part2.find(".")
-                        part2 = part2[:dotIndex]
+                        if(len(part2) < dotIndex+1):
+                            if (part2[dotIndex+1].isalpha()):
+                                part2 = part2[:dotIndex]  
+                        else:
+                            return False                          
                     names = self.checkName(part2)
                     nameIndex = x+1;
                 elif(test[x] == '+' and expIndex == 0):
