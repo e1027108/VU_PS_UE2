@@ -53,7 +53,7 @@ class Guard(Component):
                 if(expCloseCounter == expOpenCounter):
                     expOpen = False
             if (stringOpen == False and blockOpen == False and expOpen == False):
-                if ((test[x] == '=') or (test[x] == '#')):
+                if (expIndex == 0 and ((test[x] == '=') or (test[x] == '#'))):
                     e1 = Expression(test[:x-1])
                     expIndex = x+1
                 elif (test[x] == ','):
