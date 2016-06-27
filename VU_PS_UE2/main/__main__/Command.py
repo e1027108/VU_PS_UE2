@@ -39,7 +39,8 @@ class Command(Component):
                     openBrackets += 1
                 elif test[x] == ']':
                     if openBrackets == 1:
-                        if not self.checkGuardPart(test[oBI:x]):
+                        #print test[oBI:x+1]
+                        if not self.checkGuardPart(test[oBI:x+1]):
                             return False
                         else:
                             oBI = -1
@@ -50,7 +51,8 @@ class Command(Component):
                 elif test[x] == '}' or test[x] == ']' or test[x] == ')':
                     openBrackets -= 1
                 elif (openBrackets == 0) and (test[x] == ';'):
-                    e = Expression(test[oPI:x])
+                    #print test[oPI+1:x]
+                    e = Expression(test[oPI+1:x])
                     if not e.checkSyntax():
                         return False
                     else:
@@ -72,26 +74,34 @@ class Command(Component):
                 
         return True
         
-    def checkGuardPart(self,part):
+    def checkGuardPart(self,part):        
         test = part.lstrip()
         test = test.rstrip()
         openGuardCount = 0
         colonIndex = -1
         
+        #print test
+        
         for x in range(0,len(test)):
-            if (x == ':') and (openGuardCount == 0):
+            if (test[x] == ':') and (openGuardCount == 1):
                 colonIndex = x
                 break
-            elif x == '[':
+            elif test[x] == '[':
                 openGuardCount += 1
-            elif x == ']':
+            elif test[x] == ']':
                 openGuardCount -= 1
                 
         if colonIndex == -1:
             return False
         
-        g = Guard(test[:colonIndex])
-        c = Command(test[colonIndex+1:])
+        #print test[1:colonIndex]
+        #print test[colonIndex+1:len(test)-1]
+        
+        g = Guard(test[1:colonIndex])
+        c = Command(test[colonIndex+1:len(test)-1])
+        
+        #print (g.checkSyntax())
+        #print (c.checkSyntax())
         
         return (g.checkSyntax() and c.checkSyntax())
         

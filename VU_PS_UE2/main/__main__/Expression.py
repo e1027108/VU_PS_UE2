@@ -90,7 +90,7 @@ class Expression(Component):
         elif (test[0] == '{' and test[len(test)-1] == '}'):
             # this is a block
             from Block import Block
-            #print test[1:len(test)-1]
+            #print test[0:len(test)]
             b = Block(test[0:len(test)])
             return b.checkSyntax()            
         elif (test[0] == '(' and test[len(test)-1] == ')'):
