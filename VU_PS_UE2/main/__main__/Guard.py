@@ -57,7 +57,7 @@ class Guard(Component):
                     e1 = Expression(test[:x-1])
                     expIndex = x+1
                 elif (test[x] == ','):
-                    e2 = Expression(test[expIndex:x-1])
+                    e2 = Expression(test[expIndex:x])
                     guardIndex = x+1
                     break
                     
