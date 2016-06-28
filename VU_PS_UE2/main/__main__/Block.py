@@ -19,4 +19,6 @@ class Block(Component):
             c = Command(test[1:len(test)-1]) #supposed to put though everything between {}
             return c.checkSyntax()
         else:
+            print "The first symbol (currently '" + test[0] + ("') needs to be '{' and the last symbol "
+                "(currently '") + test[len(test)-1] + "') needs to be '}'. Therefore the block is not valid."
             return False

@@ -26,10 +26,12 @@ class Component(object):
         test = test.rstrip()
         
         if not (test[0].isalpha()):
+            print "'" + test[0] + "' is not a letter. It can not be at the beginning of a name."
             return False
         else:
             for x in range(1,len(test)):
                 if not (test[x].isalpha() or test[x].isdigit()):
+                    print "'" + test[x] + "' is neither letter nor digit. It can not be part of a name."
                     return False
                 
         return True
