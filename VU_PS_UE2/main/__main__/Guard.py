@@ -62,6 +62,7 @@ class Guard(Component):
                     break
                     
         if(expIndex == 0):
+            print ("Missing '=' or '#' found in Guard-Command: " + test + "\nPlease check correct Syntax: expression ('='|'#') expression [',' guard]")
             return False
                 
         if(guardIndex == 0):

@@ -67,6 +67,7 @@ class Expression(Component):
                             if (part2[dotIndex+1].isalpha()):
                                 part2 = part2[:dotIndex]  
                         else:
+                            print("There is a misplaced '.' in the name variable. This is an invalid Expression: " + test)
                             return False                          
                     names = self.checkName(part2)
                     nameIndex = x+1;
@@ -83,7 +84,7 @@ class Expression(Component):
         else:
             return (self.checkPart1(part1) and names and e.checkSyntax())
         
-        return False
+        #return False
 
         
     def checkPart1(self, test):
@@ -101,10 +102,11 @@ class Expression(Component):
             # this is an expression
             e = Expression(test[1:len(test)-1])
             return e.checkSyntax()
-        else:
+        elif not (self.checkAsterix(test)):
             # this is a name with none or multiple *
-            return self.checkAsterix(test)    
-        return False
+            print ("This is an invalid Expression: " + test)
+            return False
+        return True
     
     def checkStringLiteral(self, test):
         
@@ -112,6 +114,7 @@ class Expression(Component):
         k = '"'
                
         if k in test:
+            print ("String literals must not contain a '\"'. This is an invalid string literal: " + test)
             return False
         
         return True
