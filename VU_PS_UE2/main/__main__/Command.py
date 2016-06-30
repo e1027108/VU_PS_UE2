@@ -22,6 +22,7 @@ class Command(Component):
         oPI = -1 #openPrintIndexx
         openBrackets = 0
         qOpen = 0 #quotesOpen (yes/no)
+        concluded = 1
         
         # is there an easier way than this huge loop?
         for x in range(0,len(test)):
@@ -37,11 +38,14 @@ class Command(Component):
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
                 elif test[x] == '^':
                     oPI = x
+                    concluded = 0
                 elif (test[x] == '*') or (test[x] == '"') or test[x].isalpha():
                     oPNI = x
+                    concluded = 0
                 elif (test[x] == '{') or (test[x] == '('):
                     oPNI = x
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
+                    concluded = 0
             elif not (oBI == -1):
                 if test[x] == '[':
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
@@ -64,6 +68,7 @@ class Command(Component):
                         return False
                     else:
                         oPI = -1
+                        concluded = 1
             elif not (oPNI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
@@ -77,10 +82,14 @@ class Command(Component):
                     if not e.checkSyntax():
                         return False
                     else:
-                        oPNI = -1            
+                        oPNI = -1
+                        concluded = 1         
         
         if openBrackets > 0:
             print "There are " + str(openBrackets) + " unclosed brackets in:\n" + test + "\nIt is not a valid list of commands."
+            return False
+        elif concluded == 0:
+            print "There is an unfinished command in:\n"  + test + "\n An ';' is missing."
             return False
           
         return True
