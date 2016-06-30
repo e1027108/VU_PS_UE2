@@ -89,7 +89,7 @@ class Command(Component):
             print "There are " + str(openBrackets) + " unclosed brackets in:\n" + test + "\nIt is not a valid list of commands."
             return False
         elif concluded == 0:
-            print "There is an unfinished command in:\n"  + test + "\n An ';' is missing."
+            print "There is an unfinished command in:\n"  + test + "\nA ';' is missing."
             return False
           
         return True
