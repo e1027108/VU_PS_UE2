@@ -61,6 +61,10 @@ class Expression(Component):
                     if (nameIndex == 0):
                         part1 = test[nameIndex:x]
                     part2 = test[x+1:]
+                    if " " in part2:
+                        spaceIndex = part2.find(" ")
+                        print ("There is a ';' missing at Index " + str(len(part1) + spaceIndex) + " in the name part the Expression:"  + test)
+                        return False
                     if "." in part2:
                         dotIndex = part2.find(".")
                         if(len(part2) < dotIndex+1):
@@ -118,19 +122,6 @@ class Expression(Component):
             return False
         
         return True
-    
-#     def checkName(self, part):
-#         test = part.lstrip()
-#         test = test.rstrip()
-#         
-#         if not (test[0].isalpha()):
-#             return False
-#         else:
-#             for x in range(1,len(test)):
-#                 if not (test[x].isalpha() or test[x].isdigit()):
-#                     return False
-#                 
-#         return True
     
     def checkAsterix(self, part):
         test = part.lstrip()
