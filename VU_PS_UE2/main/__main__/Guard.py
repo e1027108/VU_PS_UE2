@@ -57,6 +57,9 @@ class Guard(Component):
                     e1 = Expression(test[:x-1])
                     expIndex = x+1
                 elif (test[x] == ','):
+                    if (expIndex == 0):
+                        print ("Missing expression in Guard-Command: " + test + "\nPlease check correct Syntax: expression ('='|'#') expression [',' guard]")
+                        return False
                     e2 = Expression(test[expIndex:x])
                     guardIndex = x+1
                     break

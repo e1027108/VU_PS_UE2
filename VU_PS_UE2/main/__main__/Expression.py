@@ -63,7 +63,7 @@ class Expression(Component):
                     part2 = test[x+1:]
                     if " " in part2:
                         spaceIndex = part2.find(" ")
-                        print ("There is a ';' missing at Index " + str(len(part1) + spaceIndex) + " in the name part the Expression:"  + test)
+                        print ("There is a ';' missing at Index " + str(len(part1) + spaceIndex) + " in the name part of Expression:"  + test)
                         return False
                     if "." in part2:
                         dotIndex = part2.find(".")
