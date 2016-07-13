@@ -1,3 +1,5 @@
+from StringList import StringList
+
 class PropertyList:
     
     def __init__(self):
