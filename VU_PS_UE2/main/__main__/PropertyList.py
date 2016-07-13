@@ -4,7 +4,10 @@ class PropertyList:
         self.property_dict = {}
     
     def addProperty(self,name,value):
-        self.property_dict.update({name:value})
+        if not (value.startswith('"') and value.endswith('"')):
+            self.property_dict.update({name:value})
+        else:
+            self.property_dict.update({name:StringList(value[1:-1])})
     
     def changeProperty(self,name,newValue):
         if self.exists(name):
