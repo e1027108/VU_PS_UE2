@@ -19,7 +19,7 @@ class Component(object):
     
     @abc.abstractmethod
     def checkSyntax(self):
-        return
+        pass
     
     def checkName(self,part):
         test = part.lstrip()
