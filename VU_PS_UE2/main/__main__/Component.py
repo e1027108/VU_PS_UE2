@@ -6,10 +6,13 @@ Created on 20. Juni 2016
 #defines the base class from which block, command, expression and guard Inherit
 
 import abc
+from PropertyList import PropertyList
 
 class Component(object):
+    
     def __init__(self,input):
         self.input = input
+        self.property_list = PropertyList()
     
     def setInput(self,input):
         self.input = input
