@@ -1,16 +1,22 @@
 class PropertyList:
     
     def __init__(self):
-        pass #TODO implement
+        self.property_dict = {}
     
     def addProperty(self,name,value):
-        pass #TODO implement
+        self.property_dict.update({name:value})
     
     def changeProperty(self,name,newValue):
-        pass #TODO implement
+        if self.exists(name):
+            self.addProperty(name,newValue)
+        else:
+            raise KeyError #means code in our language is faulty
     
-    def deleteProperty(self,name): #needed?
-        pass #TODO implement?
+    def deleteProperty(self,name):
+        del self.property_dict[name]        
     
     def getProperty(self,name):
-        pass #TODO implement
+        return self.property_dict[name]
+    
+    def exists(self,name):
+        return (name in self.property_dict)
