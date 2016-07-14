@@ -25,3 +25,6 @@ class PropertyList:
     
     def exists(self,name):
         return (name in self.property_dict)
+    
+    def getDict(self):
+        return self.property_dict

@@ -7,6 +7,8 @@ Created on 20. Juni 2016
 
 import abc
 from PropertyList import PropertyList
+from StringList import StringList
+from Block import Block
 
 class Component(object):
     
@@ -38,3 +40,45 @@ class Component(object):
                     return False
                 
         return True
+    
+    def getPropertyList(self):
+        return self.property_list
+       
+    def concatenate(self,op1,op2):
+        tmp1 = None
+        tmp2 = None
+        returnValue = None
+        
+        if isinstance(op1,PropertyList) and isinstance(op2,PropertyList):
+            return self.concatenatePropertyLists(op1,op2)
+        else:
+            if isinstance(op1,Block):
+                op1.checkSyntax() #or should/is that (be) initiated somewhere else?
+                tmp1 = op1.getPropertylist()
+            if isinstance(op2,Block):
+                op2.checkSyntax() #or should/is that (be) initiated somewhere else?
+                tmp2 = op2.getPropertylist()
+        
+        if not(tmp1 == None):
+            returnValue == tmp1
+        else:
+            returnValue == op1
+            
+        if not(tmp2 == None):
+            self.concatenate(returnValue,tmp2)
+        else:
+            self.concatenate(returnValue,op2)
+            
+        return returnValue
+        
+    def concatenatePropertyLists(self,op1,op2):
+        if not(isinstance(op1,StringList) and isinstance(op2,StringList)):
+            newList = PropertyList()
+            newList.addProperty(op1.getDict())
+            newList.addProperty(op2.getDict())
+            return newList
+        elif isinstance(op1,StringList) and isinstance(op2,StringList):
+            newString = StringList("")
+            newString.update({"string":op1.getProperty("string").get("string")+op2.getProperty("string").get("string")})
+        else:
+            pass #TODO concatenate two PropertyLists not of same inheritance level
