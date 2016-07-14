@@ -60,9 +60,9 @@ class Component(object):
                 tmp2 = op2.getPropertylist()
         
         if not(tmp1 == None):
-            returnValue == tmp1
+            returnValue = tmp1
         else:
-            returnValue == op1
+            returnValue = op1
             
         if not(tmp2 == None):
             self.concatenate(returnValue,tmp2)
