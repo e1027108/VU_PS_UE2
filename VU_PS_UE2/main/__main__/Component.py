@@ -41,9 +41,17 @@ class Component(object):
                 
         return True
     
+    def setPropertyList(self,list):
+        self.property_list = list 
+    
     def getPropertyList(self):
         return self.property_list
-       
+    
+    '''
+        TODO check whether this is working as intended, especially check:
+        The left-hand side of + is executed first (starting with a new empty property list),
+        the right-hand side afterward (starting with the result of applying the left-hand side).  
+    '''
     def concatenate(self,op1,op2):
         tmp1 = None
         tmp2 = None
@@ -72,13 +80,21 @@ class Component(object):
         return returnValue
         
     def concatenatePropertyLists(self,op1,op2):
-        if not(isinstance(op1,StringList) and isinstance(op2,StringList)):
+        if not(isinstance(op1,StringList)) and not(isinstance(op2,StringList)):
             newList = PropertyList()
             newList.addProperty(op1.getDict())
             newList.addProperty(op2.getDict())
             return newList
         elif isinstance(op1,StringList) and isinstance(op2,StringList):
             newString = StringList("")
-            newString.update({"string":op1.getProperty("string").get("string")+op2.getProperty("string").get("string")})
+            newString.changeProperty("string",op1.getProperty("string").get("string")+op2.getProperty("string").get("string"))
+            return newString
         else:
-            pass #TODO concatenate two PropertyLists not of same inheritance level
+            if isinstance(op1,StringList):
+                tmp = op2
+                tmp.addProperty("string",op1.getProperty("string").get("string"))
+                return tmp
+            else:
+                tmp = op1
+                tmp.addProperty("string",op2.getProperty("string").get("string"))
+                return tmp
