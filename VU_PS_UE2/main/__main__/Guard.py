@@ -29,6 +29,9 @@ class Guard(Component):
         expIndex = 0
         guardIndex = 0
         
+        equals = False
+        not_equals = False
+        
                
         for x in range(0, len(test)):
             if (test[x] == '"'):
@@ -54,6 +57,10 @@ class Guard(Component):
                     expOpen = False
             if (stringOpen == False and blockOpen == False and expOpen == False):
                 if (expIndex == 0 and ((test[x] == '=') or (test[x] == '#'))):
+                    if(test[x] == '='):
+                        equals = True
+                    if(test[x] == '#'):
+                        not_equals = False
                     e1 = Expression(test[:x-1])
                     expIndex = x+1
                 elif (test[x] == ','):
@@ -70,10 +77,28 @@ class Guard(Component):
                 
         if(guardIndex == 0):
             e2 = Expression(test[expIndex:])
-            return (e1.checkSyntax() and e2.checkSyntax())
+            if(e1.checkSyntax() and e2.checkSyntax()):
+                if(equals):
+                    if(e1.getInput() == e2.getInput()):
+                        return True
+                if(not_equals):
+                    if(e1.getInput() != e2.getInput()):
+                        return True
+                return False
+            else:
+                return False
         else:
             g = Guard(test[guardIndex:])
-            return (e1.checkSyntax() and e2.checkSyntax() and g.checkSyntax())
+            if(e1.checkSyntax() and e2.checkSyntax()):
+                if(equals):
+                    if(e1.getInput() == e2.getInput()):
+                        return g.checkSyntax()
+                if(not_equals):
+                    if(e1.getInput() != e2.getInput()):
+                        return g.checkSyntax()
+                return False
+            else:
+                return False
         
         
         
