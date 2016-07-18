@@ -5,7 +5,7 @@ class PropertyList:
         self.property_dict = {}
     
     def addProperty(self,name,value):
-        if not (value.startswith('"') and value.endswith('"')):
+        if isinstance(value,basestring) or (not (value.startswith('"') and value.endswith('"'))):
             self.property_dict.update({name:value})
         else:
             from StringList import StringList
