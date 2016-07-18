@@ -1,4 +1,3 @@
-from StringList import StringList
 
 class PropertyList:
     
@@ -9,6 +8,7 @@ class PropertyList:
         if not (value.startswith('"') and value.endswith('"')):
             self.property_dict.update({name:value})
         else:
+            from StringList import StringList
             self.property_dict.update({name:StringList(value[1:-1])})
     
     def changeProperty(self,name,newValue):

@@ -32,7 +32,6 @@ class Guard(Component):
         equals = False
         not_equals = False
         
-               
         for x in range(0, len(test)):
             if (test[x] == '"'):
                 if (stringOpen == False):
@@ -62,7 +61,7 @@ class Guard(Component):
                     if(test[x] == '#'):
                         not_equals = False
                     e1 = Expression(test[:x-1])
-                    expIndex = x+1
+                    expIndex = x+2
                 elif (test[x] == ','):
                     if (expIndex == 0):
                         print ("Missing expression in Guard-Command: " + test + "\nPlease check correct Syntax: expression ('='|'#') expression [',' guard]")
@@ -77,29 +76,32 @@ class Guard(Component):
                 
         if(guardIndex == 0):
             e2 = Expression(test[expIndex:])
-            if(e1.checkSyntax() and e2.checkSyntax()):
-                if(equals):
-                    if(e1.getInput() == e2.getInput()):
+            g = Guard("")
+        else:
+            g = Guard(test[guardIndex:])
+        
+        return self.checkSemantic(e1,e2,g,equals,not_equals)
+        
+    def checkSemantic(self,e1,e2,g,equals,not_equals):
+        if(e1.checkSyntax() and e2.checkSyntax()):
+            if(len(e1.getPropertyList().getDict()) == 0):
+                e1_comp_string = '""'
+            else:
+                e1_comp_string = e1.getPropertyList().getProperty(e1.getInput())
+                            
+            if(equals):
+                if(e1_comp_string == e2.getInput()):
+                    if(g.getInput() != ""):
+                        return g.checkSyntax()
+                    else:
                         return True
-                if(not_equals):
-                    if(e1.getInput() != e2.getInput()):
+            elif(not_equals):
+                if(e1_comp_string != e2.getInput()):
+                    if(g.getInput() != ""):
+                        return g.checkSyntax()
+                    else:
                         return True
-                return False
             else:
                 return False
         else:
-            g = Guard(test[guardIndex:])
-            if(e1.checkSyntax() and e2.checkSyntax()):
-                if(equals):
-                    if(e1.getInput() == e2.getInput()):
-                        return g.checkSyntax()
-                if(not_equals):
-                    if(e1.getInput() != e2.getInput()):
-                        return g.checkSyntax()
-                return False
-            else:
-                return False
-        
-        
-        
-        
+            return False

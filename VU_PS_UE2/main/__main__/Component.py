@@ -8,7 +8,6 @@ Created on 20. Juni 2016
 import abc
 from PropertyList import PropertyList
 from StringList import StringList
-from Block import Block
 
 class Component(object):
     
@@ -53,19 +52,20 @@ class Component(object):
         the right-hand side afterward (starting with the result of applying the left-hand side).  
     '''
     def concatenate(self,op1,op2):
+        
+        from Block import Block
+        
         tmp1 = None
         tmp2 = None
         returnValue = None
-        
+               
         if isinstance(op1,PropertyList) and isinstance(op2,PropertyList):
             return self.concatenatePropertyLists(op1,op2)
         else:
             if isinstance(op1,Block):
-                op1.checkSyntax() #or should/is that (be) initiated somewhere else?
-                tmp1 = op1.getPropertylist()
+                tmp1 = op1.getPropertyList()
             if isinstance(op2,Block):
-                op2.checkSyntax() #or should/is that (be) initiated somewhere else?
-                tmp2 = op2.getPropertylist()
+                tmp2 = op2.getPropertyList()
         
         if not(tmp1 == None):
             returnValue = tmp1
