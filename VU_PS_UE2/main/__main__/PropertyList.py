@@ -31,13 +31,13 @@ class PropertyList:
     
     def printList(self):
         from StringList import StringList
-        print "Entries in the property list (name: value):\n"
+        print "Entries in the property list (name: value):"
         for key in self.property_dict:
             value = self.property_dict[key]
             if isinstance(value, basestring):
-                print key + ": " + value + "\n"
+                print key + ": " + value
             elif isinstance(value,StringList):
-                print key + ": " + value.printString() + "\n"
+                print key + ": " + value.printString()
             elif isinstance(value, list):
                 result = ""
                 for c in value:
