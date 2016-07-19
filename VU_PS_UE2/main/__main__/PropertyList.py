@@ -28,3 +28,18 @@ class PropertyList:
     
     def getDict(self):
         return self.property_dict
+    
+    def printList(self):
+        from StringList import StringList
+        print "Entries in the property list (name: value):\n"
+        for key in self.property_dict:
+            value = self.property_dict[key]
+            if isinstance(value, basestring):
+                print key + ": " + value + "\n"
+            elif isinstance(value,StringList):
+                print key + ": " + value.printString() + "\n"
+            elif isinstance(value, list):
+                result = ""
+                for c in value:
+                    result += c
+                print result
