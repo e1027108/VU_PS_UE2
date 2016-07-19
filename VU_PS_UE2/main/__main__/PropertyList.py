@@ -39,7 +39,7 @@ class PropertyList:
             elif isinstance(value,StringList):
                 print key + ": " + value.printString()
             elif isinstance(value, list):
-                result = ""
+                result = key + ": "
                 for c in value:
                     result += c
                 print result
