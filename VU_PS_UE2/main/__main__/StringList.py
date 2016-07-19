@@ -10,4 +10,4 @@ class StringList(PropertyList):
         result = ""
         for c in self.property_dict["string"]:
             result += c
-        print result
+        return result
