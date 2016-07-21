@@ -7,8 +7,8 @@ from Component import Component
 
 class Expression(Component):
     
-    def __init__(self,input):
-        super(Expression,self).__init__(input)
+    def __init__(self,input,parent):
+        super(Expression,self).__init__(input,parent)
         
 
     def checkSyntax(self):
@@ -77,7 +77,7 @@ class Expression(Component):
                     nameIndex = x+1;
                 elif(test[x] == '+' and expIndex == 0):
                     # optional expression
-                    e = Expression(test[x+1:])
+                    e = Expression(test[x+1:],self.getParent())
                     if(nameIndex == 0):
                         part1 = test[:x-1]
                     expIndex = x+1;
@@ -100,7 +100,7 @@ class Expression(Component):
             # this is a block
             from Block import Block
             #print test[0:len(test)]
-            b = Block(test[0:len(test)])
+            b = Block(test[0:len(test)],self.getParent())
             if (b.checkSyntax()):
                 self.property_list = b.property_list
                 return True
@@ -108,7 +108,7 @@ class Expression(Component):
                 return False         
         elif (test[0] == '(' and test[len(test)-1] == ')'):
             # this is an expression
-            e = Expression(test[1:len(test)-1])
+            e = Expression(test[1:len(test)-1],self.getParent())
             return e.checkSyntax()
         elif not (self.checkAsterisk(test)):
             # this is a name with none or multiple *

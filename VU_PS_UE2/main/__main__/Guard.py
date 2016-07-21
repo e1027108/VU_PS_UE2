@@ -8,8 +8,8 @@ from Expression import Expression
 
 class Guard(Component):
     
-    def __init__(self,input):
-        super(Guard,self).__init__(input)
+    def __init__(self,input,parent):
+        super(Guard,self).__init__(input,parent)
         
     def checkSyntax(self):
         
@@ -60,7 +60,7 @@ class Guard(Component):
                         equals = True
                     if(test[x] == '#'):
                         not_equals = False
-                    e1 = Expression(test[:x-1])
+                    e1 = Expression(test[:x-1],self.getParent())
                     expIndex = x+2
                 elif (test[x] == ','):
                     if (expIndex == 0):
@@ -75,10 +75,10 @@ class Guard(Component):
             return False
                 
         if(guardIndex == 0):
-            e2 = Expression(test[expIndex:])
-            g = Guard("")
+            e2 = Expression(test[expIndex:],self.getParent())
+            g = Guard("",self.getParent())
         else:
-            g = Guard(test[guardIndex:])
+            g = Guard(test[guardIndex:],self.getParent())
         
         return self.checkSemantic(e1,e2,g,equals,not_equals)
         
