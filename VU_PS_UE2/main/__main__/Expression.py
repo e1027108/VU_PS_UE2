@@ -124,7 +124,9 @@ class Expression(Component):
         if k in test:
             print ("String literals must not contain a '\"'. This is an invalid string literal: " + test)
             return False
-        self.property_list.addProperty("str_lit", test)
+        
+        test = '"' + test + '"'
+        self.property_list.addProperty("stringliteral", test)
         return True
     
     def checkAsterisk(self, part):
