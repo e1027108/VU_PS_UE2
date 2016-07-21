@@ -11,8 +11,9 @@ from StringList import StringList
 
 class Component(object):
     
-    def __init__(self,input):
+    def __init__(self,input,parent):
         self.input = input
+        self.parent = parent # meaning the parent block
         self.property_list = PropertyList()
     
     def setInput(self,input):
@@ -20,6 +21,9 @@ class Component(object):
     
     def getInput(self):
         return self.input
+    
+    def getParent(self):
+        return self.parent
     
     @abc.abstractmethod
     def checkSyntax(self):
@@ -98,3 +102,12 @@ class Component(object):
                 tmp = op1
                 tmp.addProperty("string",op2.getProperty("string").get("string"))
                 return tmp
+            
+    def countStartOccurrences(self,text,char):
+        count = 0
+        for x in range(0,len(text)):
+            if text[x] == '*':
+                count += 1
+            else:
+                break
+        return count

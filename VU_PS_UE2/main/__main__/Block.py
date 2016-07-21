@@ -8,15 +8,15 @@ from Command import Command
 
 class Block(Component):
     
-    def __init__(self,input):
-        super(Block,self).__init__(input)
+    def __init__(self,input,parent):
+        super(Block,self).__init__(input,parent)
     
     def checkSyntax(self):
         test = self.getInput().lstrip()
         test = test.rstrip()
         
         if (test[0] == '{') and (test[len(test)-1] == '}'):
-            c = Command(test[1:len(test)-1]) #supposed to put though everything between {}
+            c = Command(test[1:len(test)-1],self) #supposed to put though everything between {}
             c.setPropertyList(self.property_list) #commands should get access to all already existing propertylists?
             if c.checkSyntax():
                 cList = c.getPropertyList().getDict()

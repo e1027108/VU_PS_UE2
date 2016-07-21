@@ -15,6 +15,6 @@ def checkSyntax(path):
 
     #TODO now check Syntax
     
-    b = Block(data)
+    b = Block(data,None)
     
     return b.checkSyntax()

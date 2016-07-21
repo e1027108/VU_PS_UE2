@@ -7,11 +7,10 @@ from Component import Component
 from Expression import Expression
 from Guard import Guard
 
-
 class Command(Component):
     
-    def __init__(self,input):
-        super(Command,self).__init__(input)
+    def __init__(self,input,parent):
+        super(Command,self).__init__(input,parent)
     
     def checkSyntax(self):
         test = self.input.lstrip()
@@ -23,6 +22,7 @@ class Command(Component):
         openBrackets = 0
         qOpen = 0 #quotesOpen (yes/no)
         concluded = 1
+        outerblock = 0
         
         # is there an easier way than this huge loop?
         for x in range(0,len(test)):
@@ -63,11 +63,11 @@ class Command(Component):
                     openBrackets = self.manageBrackets(openBrackets,qOpen,-1)
                 elif (openBrackets == 0) and (test[x] == ';'):
                     #print test[oPI+1:x]
-                    e = Expression(test[oPI+1:x])
+                    e = Expression(test[oPI+1:x],self.getParent())
                     if not e.checkSyntax():
                         return False
                     else:
-                        self.property_list = e.getPropertyList() # replacing current block propList with e's
+                        self.property_list = e.getPropertyList() # replacing current block propList with e? TODO check
                         return True # terminating the execution of the block
             elif not (oPNI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':
@@ -76,14 +76,16 @@ class Command(Component):
                     openBrackets = self.manageBrackets(openBrackets,qOpen,-1)
                 elif (openBrackets == 0) and (test[x] == ';'):
                     if(test[oPNI] == '*' or test[oPNI].isalpha()):
+                        outerblock = self.countStartOccurrences(test[oPNI:],'*')
                         oPNI += test[oPNI:].index('=')+1
-                    #print test[oPNI:x]
-                    e = Expression(test[oPNI:x])
+                    e = Expression(test[oPNI:x],self.getParent())
                     if not e.checkSyntax():
                         return False
                     else:
+                        # TODO now acquire the property of outerblock many ancestor blocks away and fill it anew
                         oPNI = -1
-                        concluded = 1         
+                        concluded = 1
+                        outerblock = 0        
         
         if openBrackets > 0:
             print "There are " + str(openBrackets) + " unclosed brackets in:\n" + test + "\nIt is not a valid list of commands."
@@ -133,8 +135,8 @@ class Command(Component):
         #print test[1:colonIndex]
         #print test[colonIndex+1:len(test)-1]
         
-        g = Guard(test[1:colonIndex])
-        c = Command(test[colonIndex+1:len(test)-1])
+        g = Guard(test[1:colonIndex],self.getParent())
+        c = Command(test[colonIndex+1:len(test)-1],self.getParent())
         
         #print (g.checkSyntax())
         #print (c.checkSyntax())
@@ -158,7 +160,7 @@ class Command(Component):
         left = test[noPointerIndex:equalsIndex]
         
         right = test[equalsIndex+1:]
-        e = Expression(right)
+        e = Expression(right,self.getParent())
         
         if e.checkSyntax() and (self.checkName(left) or (equalsIndex == -1)):
             return True
