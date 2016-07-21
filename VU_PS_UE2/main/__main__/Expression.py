@@ -101,7 +101,11 @@ class Expression(Component):
             from Block import Block
             #print test[0:len(test)]
             b = Block(test[0:len(test)])
-            return b.checkSyntax()            
+            if (b.checkSyntax()):
+                self.property_list = b.property_list
+                return True
+            else:
+                return False         
         elif (test[0] == '(' and test[len(test)-1] == ')'):
             # this is an expression
             e = Expression(test[1:len(test)-1])
