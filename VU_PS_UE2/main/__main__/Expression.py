@@ -106,7 +106,7 @@ class Expression(Component):
             # this is an expression
             e = Expression(test[1:len(test)-1])
             return e.checkSyntax()
-        elif not (self.checkAsterix(test)):
+        elif not (self.checkAsterisk(test)):
             # this is a name with none or multiple *
             print ("This is an invalid Expression: " + test)
             return False
@@ -116,14 +116,14 @@ class Expression(Component):
         
         test = test[1:len(test)-1]
         k = '"'
-               
+    
         if k in test:
             print ("String literals must not contain a '\"'. This is an invalid string literal: " + test)
             return False
-        
+        self.property_list.addProperty("str_lit", test)
         return True
     
-    def checkAsterix(self, part):
+    def checkAsterisk(self, part):
         test = part.lstrip()
         test = test.rstrip()
         
@@ -138,7 +138,13 @@ class Expression(Component):
                 break
        
         if(otherIndex != len(test)):
-            return self.checkName(test[nameIndex:otherIndex])
-        
-        return self.checkName(test[nameIndex:])
+            if(self.checkName(test[nameIndex:otherIndex])):
+                name = test[nameIndex:otherIndex]
+                self.property_list.addProperty(name, '""')
+                return True
+        elif(self.checkName(test[nameIndex:])):
+            name = test[nameIndex:]
+            self.property_list.addProperty(name, '""')
+            return True
+        return False
         
