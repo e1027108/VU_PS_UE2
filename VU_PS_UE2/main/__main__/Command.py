@@ -67,8 +67,8 @@ class Command(Component):
                     if not e.checkSyntax():
                         return False
                     else:
-                        oPI = -1
-                        concluded = 1
+                        self.property_list = e.getPropertyList() # replacing current block propList with e's
+                        return True # terminating the execution of the block
             elif not (oPNI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
