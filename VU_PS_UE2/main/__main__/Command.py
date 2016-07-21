@@ -51,6 +51,7 @@ class Command(Component):
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
                 elif test[x] == ']':
                     if openBrackets == 1:
+                        #TODO we should have some guard semantics handling here
                         if not self.checkGuardPart(test[oBI:x+1]):
                             return False
                         else:
@@ -67,7 +68,7 @@ class Command(Component):
                     if not e.checkSyntax():
                         return False
                     else:
-                        self.property_list = e.getPropertyList() # replacing current block propList with e? TODO check
+                        self.property_list = e.getPropertyList()
                         return True # terminating the execution of the block
             elif not (oPNI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':

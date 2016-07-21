@@ -106,7 +106,7 @@ class Component(object):
     def countStartOccurrences(self,text,char):
         count = 0
         for x in range(0,len(text)):
-            if text[x] == '*':
+            if text[x] == char:
                 count += 1
             else:
                 break
