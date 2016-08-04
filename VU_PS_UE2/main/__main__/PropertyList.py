@@ -5,11 +5,14 @@ class PropertyList:
         self.property_dict = {}
     
     def addProperty(self,name,value):
-        if isinstance(value,basestring) or (not (value.startswith('"') and value.endswith('"'))):
-            self.property_dict.update({name:value})
+        if isinstance(value,basestring):
+            if (not (value.startswith('"') and value.endswith('"'))):
+                self.property_dict.update({name:value})
+            else:
+                from StringList import StringList
+                self.property_dict.update({name:StringList(value[1:-1])})
         else:
-            from StringList import StringList
-            self.property_dict.update({name:StringList(value[1:-1])})
+            self.property_dict.update({name:value})
     
     def changeProperty(self,name,newValue):
         if self.exists(name):

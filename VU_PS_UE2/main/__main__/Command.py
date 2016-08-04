@@ -51,10 +51,9 @@ class Command(Component):
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
                 elif test[x] == ']':
                     if openBrackets == 1:
-                        #TODO we should have some guard semantics handling here
-                        if not self.checkGuardPart(test[oBI:x+1]):
+                        if not self.checkGuardPart(test[oBI:x+1]): # on true handling below
                             return False
-                        else:
+                        else:       
                             oBI = -1
                     openBrackets = self.manageBrackets(openBrackets,qOpen,-1)
             elif not (oPI == -1):
@@ -76,14 +75,29 @@ class Command(Component):
                 elif test[x] == '}' or test[x] == ']' or test[x] == ')':
                     openBrackets = self.manageBrackets(openBrackets,qOpen,-1)
                 elif (openBrackets == 0) and (test[x] == ';'):
+                    namelength = 0
                     if(test[oPNI] == '*' or test[oPNI].isalpha()):
                         outerblock = self.countStartOccurrences(test[oPNI:],'*')
-                        oPNI += test[oPNI:].index('=')+1
-                    e = Expression(test[oPNI:x],self.getParent())
+                        namelength = test[oPNI:].index('=')
+                    #print test[oPNI:oPNI+namelength]
+                    #print test[oPNI+namelength+1:x]
+                    e = Expression(test[oPNI+namelength+1:x],self.getParent())
                     if not e.checkSyntax():
                         return False
                     else:
-                        # TODO now acquire the property of outerblock many ancestor blocks away and fill it anew
+                        curr = self.getParent()
+                        for x in range (0,outerblock):
+                            curr = curr.getParent()
+                            
+                        name = test[oPNI:oPNI+namelength].rstrip()
+                        name = name.lstrip()
+                        
+                        #TODO should changing of properties change list internal values if list already exists?
+                        if curr == self.getParent():
+                            curr.getPropertyList().addProperty(name,e.getPropertyList())
+                        else:
+                            curr.getPropertyList().changeProperty(name,e.getPropertyList())
+                        
                         oPNI = -1
                         concluded = 1
                         outerblock = 0        
@@ -110,8 +124,6 @@ class Command(Component):
         colonIndex = -1
         qOpen = 0
         
-        #print test
-        
         for x in range(0,len(test)):
             if test[x] == '"':
                 if qOpen == 1:
@@ -133,16 +145,13 @@ class Command(Component):
             print "Not a guard command: " + test + " is missing ':'."
             return False
         
-        #print test[1:colonIndex]
-        #print test[colonIndex+1:len(test)-1]
-        
         g = Guard(test[1:colonIndex],self.getParent())
         c = Command(test[colonIndex+1:len(test)-1],self.getParent())
         
-        #print (g.checkSyntax())
-        #print (c.checkSyntax())
-        
-        return (g.checkSyntax() and c.checkSyntax())
+        if g.checkSyntax():
+            return c.checkSyntax()
+        else:
+            return False
         
     def checkAssignmentPart(self,part):
         test = part.lstrip()
