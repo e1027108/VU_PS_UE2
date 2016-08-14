@@ -33,7 +33,10 @@ class StringList(PropertyList):
         self.property_dict.add({"out",self.doLinuxOut(self.getProperty("string"))})
         
     def doLinuxSysCall(self,string):
-        return subprocess.call(string.split(),shell=True)
+        #TODO also print the output?
+        process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
+        process.communicate()[0]
+        print process.returncode
     
     def doLinuxIOSysCall(self,string):
         return "" #TODO do it!!!s
