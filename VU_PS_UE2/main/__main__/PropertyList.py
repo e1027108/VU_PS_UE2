@@ -10,7 +10,10 @@ class PropertyList:
                 self.property_dict.update({name:value})
             else:
                 from StringList import StringList
-                self.property_dict.update({name:StringList(value[1:-1])})
+                if(len(value) == 2):
+                    self.property_dict.update({name:""})
+                else:
+                    self.property_dict.update({name:StringList(value[1:-1])})
         else:
             self.property_dict.update({name:value})
     

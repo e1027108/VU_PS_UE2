@@ -83,14 +83,25 @@ class Guard(Component):
         return self.checkSemantic(e1,e2,g,equals,not_equals)
         
     def checkSemantic(self,e1,e2,g,equals,not_equals):
+        
+        #### wenn e2 ein stringliteral ist
         if(e1.checkSyntax() and e2.checkSyntax()):
             if(len(e1.getPropertyList().getDict()) == 0):
                 e1_comp_string = '""'
             else:
                 e1_comp_string = e1.getPropertyList().getProperty(e1.getInput())
+                if (e1_comp_string == ""):
+                    e1_comp_string = '""'
+                    
+            if(len(e2.getPropertyList().getDict()) == 0):
+                e2_comp_string = '""'
+            else:
+                e2_comp_string = e2.getPropertyList().getProperty("stringliteral")
+                if (e2_comp_string == ""):
+                    e2_comp_string = '""'
                             
             if(equals):
-                if(e1_comp_string == e2.getInput()):
+                if(e1_comp_string == e2_comp_string):
                     if(g.getInput() != ""):
                         return g.checkSyntax()
                     else:
@@ -101,7 +112,5 @@ class Guard(Component):
                         return g.checkSyntax()
                     else:
                         return True
-            else:
-                return False
-        else:
-            return False
+
+        return False

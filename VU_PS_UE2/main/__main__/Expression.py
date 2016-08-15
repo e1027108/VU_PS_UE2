@@ -8,8 +8,11 @@ from Component import Component
 class Expression(Component):
     
     def __init__(self,input,parent):
+        self.previous = None
         super(Expression,self).__init__(input,parent)
         
+    def setPrevious(self, prop_list):
+        self.previous = prop_list        
 
     def checkSyntax(self):
         
@@ -74,21 +77,39 @@ class Expression(Component):
                             print("There is a misplaced '.' in the name variable. This is an invalid Expression: " + test)
                             return False                          
                     names = self.checkName(part2)
-                    nameIndex = x+1;
+                    nameIndex = x+1
                 elif(test[x] == '+' and expIndex == 0):
                     # optional expression
                     e = Expression(test[x+1:],self.getParent())
                     if(nameIndex == 0):
                         part1 = test[:x-1]
-                    expIndex = x+1;
+                    expIndex = x+1
                     break       
+                
+        # A + B + C -> write A + B in B property list if A (previous) exists 
+        #if(self.previous != None):
+        #    self.property_list = self.concatenate(self.previous, self.property_list)
         
         if (expIndex == 0):
-            return (self.checkPart1(part1) and names)     
+            #return (self.checkPart1(part1) and names)
+            if(self.checkPart1(part1) and names):
+                if(self.previous != None):
+                    self.property_list = self.concatenate(self.previous, self.property_list)
+                return True                    
         else:
-            return (self.checkPart1(part1) and names and e.checkSyntax())
+            #return (self.checkPart1(part1) and names and e.checkSyntax())
+            if(self.checkPart1(part1)):
+                if(self.previous != None):
+                    self.property_list = self.concatenate(self.previous, self.property_list)
         
-        #return False
+            
+                e.previous = self.property_list
+                if (names and e.checkSyntax()):
+                #self.property_list = self.concatenate(self.property_list, e.getPropertyList())
+                    self.property_list = self.concatenate(self.property_list, e.getPropertyList())
+                    return True
+        return False        
+       
 
         
     def checkPart1(self, test):
@@ -109,7 +130,11 @@ class Expression(Component):
         elif (test[0] == '(' and test[len(test)-1] == ')'):
             # this is an expression
             e = Expression(test[1:len(test)-1],self.getParent())
-            return e.checkSyntax()
+            if (e.checkSyntax()):
+                self.property_list = e.property_list
+                return True
+            else:
+                return False
         elif not (self.checkAsterisk(test)):
             # this is a name with none or multiple *
             print ("This is an invalid Expression: " + test)
@@ -125,7 +150,7 @@ class Expression(Component):
             print ("String literals must not contain a '\"'. This is an invalid string literal: " + test)
             return False
         
-        test = '"' + test + '"'
+        #test = '"' + test + '"'
         self.property_list.addProperty("stringliteral", test)
         return True
     
@@ -142,15 +167,62 @@ class Expression(Component):
             elif ((test[x] == '.' or test[x] == '+') and otherIndex == len(test)):
                 otherIndex = x-1
                 break
-       
-        if(otherIndex != len(test)):
-            if(self.checkName(test[nameIndex:otherIndex])):
-                name = test[nameIndex:otherIndex]
-                self.property_list.addProperty(name, '""')
-                return True
-        elif(self.checkName(test[nameIndex:])):
-            name = test[nameIndex:]
-            self.property_list.addProperty(name, '""')
-            return True
-        return False
+            
+        ### sollte nicht immer leere Property erstellen
+#         if(otherIndex != len(test)):              
+#             if(self.checkName(test[nameIndex:otherIndex])):
+#                 name = test[nameIndex:otherIndex]
+#                 self.property_list.addProperty(name, '""')
+#                 return True
+#         elif(self.checkName(test[nameIndex:])):
+#             name = test[nameIndex:]
+#             self.property_list.addProperty(name, '""')
+#             return True
+#         return False
+        ###
         
+        
+            name = test[nameIndex:]
+            if(nameIndex > 0):
+                # get prop list of outer blocks
+                
+                # get referred parent block
+                for i in range(0, nameIndex - 1):
+                    parent = self.getParent()        
+                    
+                name_helper = name.split(".")
+                
+                if (len(name_helper) > 0):
+                    for i in range(0, len(name_helper)-1):
+                        if(parent.property_list.exists(name_helper[i])):
+                            prop = parent.property_list.getProperty(name_helper[i])
+                           
+                            from PropertyList import PropertyList
+                                
+                            if(isinstance(prop, PropertyList)):
+                                parent = prop
+                            else:
+                                return False
+                            
+                    if(parent.property_list.exists(name_helper[len(name_helper)-1])):
+                        self.property_list.addProperty(name_helper[len(name_helper)-1], prop)
+                        return True
+                    else:
+                        return False
+                
+                else:
+                    if(parent.property_list.exists(name)):
+                            return True
+                    else:
+                        parent.property_list.addProperty(name)
+                        return True
+                        
+                        
+            else:
+                # prop list of current block
+                if(self.property_list.exists(name)):
+                    return True
+                else:
+                    self.property_list.addProperty(name, "")
+                    return True     
+            
