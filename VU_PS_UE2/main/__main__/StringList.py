@@ -17,8 +17,6 @@ class StringList(PropertyList):
     def initializeSystemFunctions(self):
         self.sysCall()
         self.IOSysCall()
-        self.sys_return()
-        self.out()
         
     def sysCall(self):
         self.property_dict.add({"syscall",self.doLinuxSysCall(self.getProperty("string"))})
@@ -26,23 +24,12 @@ class StringList(PropertyList):
     def IOSysCall(self):
         self.property_dict.add({"iosyscall",self.doLinuxIOSysCall(self.getProperty("string"))})
         
-    def sys_return(self):
-        self.property_dict.add({"return",self.doLinuxReturn(self.getProperty("string"))})
-        
-    def out(self):
-        self.property_dict.add({"out",self.doLinuxOut(self.getProperty("string"))})
-        
     def doLinuxSysCall(self,string):
-        #TODO also print the output?
         process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
         process.communicate()[0]
-        print process.returncode
+        #TODO into result?
+        #TODO prints into Out?
+        return process.returncode
     
     def doLinuxIOSysCall(self,string):
-        return "" #TODO do it!!!s
-    
-    def doLinuxReturn(self,string):
-        return "" #TODO do it!!!s
-    
-    def doLinuxOut(self,string):
-        return "" #TODO do it!!!s
+        return "" #TODO same as syscall, just without result and printing things

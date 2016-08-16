@@ -86,8 +86,8 @@ class Component(object):
     def concatenatePropertyLists(self,op1,op2):
         if not(isinstance(op1,StringList)) and not(isinstance(op2,StringList)):
             newList = PropertyList()
-            newList.addProperty(op1.getDict())
-            newList.addProperty(op2.getDict())
+            newList.getDict().update(op1.getDict())
+            newList.getDict().update(op2.getDict())
             return newList
         elif isinstance(op1,StringList) and isinstance(op2,StringList):
             newString = StringList("")
