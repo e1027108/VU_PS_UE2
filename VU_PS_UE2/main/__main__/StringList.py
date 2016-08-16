@@ -26,10 +26,17 @@ class StringList(PropertyList):
         
     def doLinuxSysCall(self,string):
         process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
+        
+        fullOutput = ""
+        line = process.stdout.readline()
+        while line:
+            line = process.stdout.readline()
+            fullOutput += line
+        
         process.communicate()[0]
-        #TODO into result?
-        #TODO prints into Out?
-        return process.returncode
+        self.property_dict({"result",process.returncode})
+        self.property_dict({"out",fullOutput})
+        return process.returncode #this writes returncode to "syscall" as well
     
     def doLinuxIOSysCall(self,string):
         return "" #TODO same as syscall, just without result and printing things
