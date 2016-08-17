@@ -39,4 +39,13 @@ class StringList(PropertyList):
         return process.returncode #this writes returncode to "syscall" as well
     
     def doLinuxIOSysCall(self,string):
-        return "" #TODO same as syscall, just without result and printing things
+        process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
+        
+        fullOutput = ""
+        line = process.stdout.readline()
+        while line:
+            line = process.stdout.readline()
+            fullOutput += line
+        
+        self.property_dict({"out",fullOutput})
+        return fullOutput#TODO what goes here, IOSysCall should be a property in list, right?
