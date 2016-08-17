@@ -25,7 +25,7 @@ class StringList(PropertyList):
         self.property_dict.add({"iosyscall",self.doLinuxIOSysCall(self.getProperty("string"))})
         
     def doLinuxSysCall(self,string):
-        process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
+        process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
         
         fullOutput = ""
         line = process.stdout.readline()
@@ -39,7 +39,7 @@ class StringList(PropertyList):
         return process.returncode #this writes returncode to "syscall" as well
     
     def doLinuxIOSysCall(self,string):
-        process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
+        process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
         
         fullOutput = ""
         line = process.stdout.readline()
