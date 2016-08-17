@@ -1,12 +1,12 @@
 from PropertyList import PropertyList
 import subprocess
 
-class StringList(PropertyList):
+class StringList(PropertyList, object):
     
     def __init__(self,input):
         super(StringList,self).__init__()
         self.addProperty("string", list(input))
-        self.initializeSystemFunctions()
+        #self.initializeSystemFunctions()
 
     def printString(self):
         result = ""
@@ -14,15 +14,15 @@ class StringList(PropertyList):
             result += c
         return result
     
-    def initializeSystemFunctions(self):
-        self.sysCall()
-        self.IOSysCall()
+    #def initializeSystemFunctions(self):
+    #    self.sysCall()
+    #    self.IOSysCall()
         
     def sysCall(self):
-        self.property_dict.add({"syscall",self.doLinuxSysCall(self.getProperty("string"))})
+        self.property_dict.update({"syscall",self.doLinuxSysCall(self.getProperty("string"))})
         
     def IOSysCall(self):
-        self.property_dict.add({"iosyscall",self.doLinuxIOSysCall(self.getProperty("string"))})
+        self.property_dict.update({"iosyscall",self.doLinuxIOSysCall(self.getProperty("string"))})
         
     def doLinuxSysCall(self,string):
         process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
