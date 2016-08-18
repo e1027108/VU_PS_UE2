@@ -24,22 +24,24 @@ class StringList(PropertyList, object):
     def IOSysCall(self):
         self.property_dict.update({"iosyscall",self.doLinuxIOSysCall(self.getProperty("string"))})
         
+    #printing everything and just returning one value
     def doLinuxSysCall(self,string):
-        process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
+        process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
         
-        fullOutput = ""
         line = process.stdout.readline()
         while line:
+            print line
             line = process.stdout.readline()
-            fullOutput += line
+            
+        print line
         
         process.communicate()[0]
-        self.property_dict({"result",process.returncode})
-        self.property_dict({"out",fullOutput})
-        return process.returncode #this writes returncode to "syscall" as well
+        return process.returncode #this writes returncode to "syscall"
     
+    #"out" and "result" saved in new propertylist, print output?
     def doLinuxIOSysCall(self,string):
-        process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
+        IOSysCallList = PropertyList()
+        process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
         
         fullOutput = ""
         line = process.stdout.readline()
@@ -47,5 +49,7 @@ class StringList(PropertyList, object):
             line = process.stdout.readline()
             fullOutput += line
         
-        self.property_dict({"out",fullOutput})
-        return fullOutput#TODO what goes here, IOSysCall should be a property in list, right?
+        IOSysCallList.addProperty("out",fullOutput)
+        process.communicate()[0]
+        IOSysCallList.addProperty("result",process.returncode)
+        return IOSysCallList
