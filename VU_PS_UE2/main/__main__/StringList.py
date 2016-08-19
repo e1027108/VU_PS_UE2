@@ -30,10 +30,10 @@ class StringList(PropertyList, object):
         
         line = process.stdout.readline()
         while line:
-            print line
+            print line.rstrip('\n')
             line = process.stdout.readline()
             
-        print line
+        print line.rstrip('\n')
         
         process.communicate()[0]
         return process.returncode #this writes returncode to "syscall"
@@ -44,13 +44,22 @@ class StringList(PropertyList, object):
         process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         
         fullOutput = ""
+        fullError = ""
         
         line = process.stdout.readline()
+        fullOutput += line
         while line:
             line = process.stdout.readline()
             fullOutput += line
+            
+        line = process.stderr.readline()
+        fullError += line
+        while line:
+            line = process.stderr.readline()
+            fullError += line
         
         IOSysCallList.addProperty("out",fullOutput)
+        IOSysCallList.addProperty("err",fullError)
         process.communicate()[0]
         IOSysCallList.addProperty("result",process.returncode)
         return IOSysCallList
