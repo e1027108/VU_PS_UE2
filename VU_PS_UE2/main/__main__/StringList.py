@@ -26,7 +26,7 @@ class StringList(PropertyList, object):
         
     #printing everything and just returning one value
     def doLinuxSysCall(self,string):
-        process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
+        process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
         
         line = process.stdout.readline()
         while line:
@@ -41,9 +41,10 @@ class StringList(PropertyList, object):
     #"out" and "result" saved in new propertylist, print output?
     def doLinuxIOSysCall(self,string):
         IOSysCallList = PropertyList()
-        process = subprocess.Popen(string.split(),stdout=subprocess.PIPE)
+        process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         
         fullOutput = ""
+        
         line = process.stdout.readline()
         while line:
             line = process.stdout.readline()
