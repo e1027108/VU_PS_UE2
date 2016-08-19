@@ -1,5 +1,6 @@
 from PropertyList import PropertyList
 import subprocess
+import sys
 
 class StringList(PropertyList, object):
     
@@ -24,6 +25,10 @@ class StringList(PropertyList, object):
     def IOSysCall(self):
         self.property_dict.update({"iosyscall",self.doLinuxIOSysCall(self.getProperty("string"))})
         
+    #There is supposed to be a prompt in the file, for which an input is gathered
+    def userInput(self):
+        self.property_dict.update({"userinput",self.promptUserInput("string")})
+        
     #printing everything and just returning one value
     def doLinuxSysCall(self,string):
         process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
@@ -36,9 +41,9 @@ class StringList(PropertyList, object):
         print line.rstrip('\n')
         
         process.communicate()[0]
-        return process.returncode #this writes returncode to "syscall"
+        return process.returncode #this writes return code to "syscall"
     
-    #"out" and "result" saved in new propertylist, print output?
+    #"out", "err" and "result" saved in new property list, print output?
     def doLinuxIOSysCall(self,string):
         IOSysCallList = PropertyList()
         process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
@@ -63,3 +68,10 @@ class StringList(PropertyList, object):
         process.communicate()[0]
         IOSysCallList.addProperty("result",process.returncode)
         return IOSysCallList
+    
+    #TODO useful?
+    def promptUserInput(self,string):
+        input = raw_input(string)
+        #print "Your input " + input + " was saved."
+        inputList = StringList(input)
+        return inputList
