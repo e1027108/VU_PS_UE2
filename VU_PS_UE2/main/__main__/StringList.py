@@ -27,7 +27,7 @@ class StringList(PropertyList, object):
         
     #There is supposed to be a prompt in the file, for which an input is gathered
     def userInput(self):
-        self.property_dict.update({"userinput",self.promptUserInput("string")})
+        self.property_dict.update({"userinput",self.promptUserInput(self.getProperty("string"))})
         
     #printing everything and just returning one value
     def doLinuxSysCall(self,string):
@@ -75,3 +75,22 @@ class StringList(PropertyList, object):
         #print "Your input " + input + " was saved."
         inputList = StringList(input)
         return inputList
+    
+    #directly filled as a property of the string, called as ".length"
+    def stringLength(self):
+        self.property_dict.update({"length",len(self.getProperty("string"))})
+    
+    #removing leading and trailing spaces, newlines and tabs, called as ".trim"
+    def trim(self):
+        trimmed = ''.join(self.getProperty("string")).strip()
+        self.property_dict.update({"trim",trimmed})
+        
+    #checks whether string is numeric, writes 0 or 1 into "isnumeric", called as ".isnumeric"
+    def isnumeric(self):
+        isnumeric = 0
+        string = ''.join(self.getProperty("string"))
+        if string.isdigit():
+            isnumeric = 1
+        elif (string[0] == '-') and string[1:].isdigit():
+            isnumeric = 1
+        self.property_dict.update({"isnumeric",isnumeric})
