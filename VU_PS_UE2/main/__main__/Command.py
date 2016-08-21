@@ -148,10 +148,15 @@ class Command(Component):
         g = Guard(test[1:colonIndex],self.getParent())
         c = Command(test[colonIndex+1:len(test)-1],self.getParent())
         
-        if g.checkSyntax():
-            return c.checkSyntax()
-        else:
+        guardValue = g.checkSyntax()
+        
+        if guardValue == -1: #syntax problem
             return False
+        elif guardValue == 0: #semantically wrong i.e. the "program" guard returns false
+            c.setSyntaxOnly(True)
+            return c.checkSyntax()
+        elif guardValue == 1: #check
+            return c.checkSyntax()
         
     def checkAssignmentPart(self,part):
         test = part.lstrip()
