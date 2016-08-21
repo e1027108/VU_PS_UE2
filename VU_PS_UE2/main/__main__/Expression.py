@@ -9,6 +9,7 @@ class Expression(Component):
     
     def __init__(self,input,parent):
         self.previous = None
+        self.exec_list = {"syscall", "iosyscall"}
         super(Expression,self).__init__(input,parent)
         
     def setPrevious(self, prop_list):
@@ -35,6 +36,8 @@ class Expression(Component):
         names = True
         
         part1 = test
+        
+        part2 = None
         
         for x in range(0, len(test)):
             if (test[x] == '"'):
@@ -93,21 +96,35 @@ class Expression(Component):
         if (expIndex == 0):
             #return (self.checkPart1(part1) and names)
             if(self.checkPart1(part1) and names):
+                if (part2 in self.exec_list):
+                    self.handleLinuxCommand(part2)   
+                    
                 if(self.previous != None):
                     self.property_list = self.concatenate(self.previous, self.property_list)
+                    
+                                     
                 return True                    
         else:
             #return (self.checkPart1(part1) and names and e.checkSyntax())
             if(self.checkPart1(part1)):
+                if (part2 in self.exec_list):
+                        self.handleLinuxCommand(part2)
                 if(self.previous != None):
                     self.property_list = self.concatenate(self.previous, self.property_list)
         
             
                 e.previous = self.property_list
                 if (names and e.checkSyntax()):
+                    if (part2 in self.exec_list):
+                        self.handleLinuxCommand(part2)
                 #self.property_list = self.concatenate(self.property_list, e.getPropertyList())
-                    self.property_list = self.concatenate(self.property_list, e.getPropertyList())
+                    #self.property_list = self.concatenate(self.property_list, e.getPropertyList())
+                    self.property_list = e.getPropertyList()
+                    
                     return True
+                
+                
+                
         return False        
        
 
@@ -150,8 +167,14 @@ class Expression(Component):
             print ("String literals must not contain a '\"'. This is an invalid string literal: " + test)
             return False
         
-        #test = '"' + test + '"'
-        self.property_list.addProperty("stringliteral", test)
+        if len(test) < 1:
+            return True
+        
+        
+        test = '"' + test + '"'
+        ########self.property_list.addProperty("stringliteral", test)
+        from StringList import StringList
+        self.property_list = StringList(test[1:-1])
         return True
     
     def checkAsterisk(self, part):
@@ -225,4 +248,14 @@ class Expression(Component):
                 else:
                     self.property_list.addProperty(name, "")
                     return True     
-            
+                
+                
+    def handleLinuxCommand(self, part2):
+        from StringList import StringList
+        if(isinstance(self.property_list, StringList)):
+            if(part2 == "syscall"):
+                returnCode = self.property_list.doLinuxSysCall(self.property_list.printString())
+                self.property_list.changeProperty("string", returnCode)
+                print returnCode
+            if(part2 == "iosyscall"):
+                output = self.property_list.doLinuxIOSysCall(self.property_list.getProperty("string"))

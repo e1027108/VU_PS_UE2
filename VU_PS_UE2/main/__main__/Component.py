@@ -91,17 +91,22 @@ class Component(object):
             return newList
         elif isinstance(op1,StringList) and isinstance(op2,StringList):
             newString = StringList("")
-            newString.changeProperty("string",op1.getProperty("string").get("string")+op2.getProperty("string").get("string"))
+            ######newString.changeProperty("string",op1.getProperty("string").get("string")+op2.getProperty("string").get("string"))
+            newString.changeProperty("string",op1.getProperty("string")+op2.getProperty("string"))
             return newString
         else:
+            tmp = StringList("")
             if isinstance(op1,StringList):
-                tmp = op2
-                tmp.addProperty("string",op1.getProperty("string").get("string"))
-                return tmp
+                tmp.getDict().update(op2.getDict())
+                #tmp = op2
+                ######tmp.addProperty("string",op1.getProperty("string").get("string"))
+                tmp.changeProperty("string",op1.getProperty("string"))
             else:
-                tmp = op1
-                tmp.addProperty("string",op2.getProperty("string").get("string"))
-                return tmp
+                #tmp = op1
+                tmp.getDict().update(op1.getDict())
+                ######tmp.addProperty("string",op2.getProperty("string").get("string"))
+                tmp.changeProperty("string",op2.getProperty("string"))
+            return tmp
             
     def countStartOccurrences(self,text,char):
         count = 0

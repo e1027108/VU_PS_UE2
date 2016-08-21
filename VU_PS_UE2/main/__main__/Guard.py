@@ -5,6 +5,7 @@ Created on 21. Juni 2016
 '''
 from Component import Component
 from Expression import Expression
+from numpy import integer
 
 class Guard(Component):
     
@@ -80,23 +81,32 @@ class Guard(Component):
         else:
             g = Guard(test[guardIndex:],self.getParent())
         
-        return self.checkSemantic(e1,e2,g,equals,not_equals)
+        return (self.checkSemantic(e1,e2,g,equals,not_equals))
         
     def checkSemantic(self,e1,e2,g,equals,not_equals):
         
+        from StringList import StringList
+        
         #### wenn e2 ein stringliteral ist
         if(e1.checkSyntax() and e2.checkSyntax()):
-            if(len(e1.getPropertyList().getDict()) == 0):
-                e1_comp_string = '""'
-            else:
-                e1_comp_string = e1.getPropertyList().getProperty(e1.getInput())
-                if (e1_comp_string == ""):
-                    e1_comp_string = '""'
-                    
-            if(len(e2.getPropertyList().getDict()) == 0):
-                e2_comp_string = '""'
-            else:
-                e2_comp_string = e2.getPropertyList().getProperty("stringliteral")
+            
+            e1_comp_string = '""'
+            e2_comp_string = '""'
+            
+            if(len(self.parent.getPropertyList().getDict()) > 0):
+                if (e1.getInput() in self.parent.getPropertyList().getDict()):
+                    e1_comp_string = self.parent.getPropertyList().getProperty(e1.getInput())
+                    if(isinstance(e1_comp_string, StringList)):
+                        e1_comp_string = e1_comp_string.getProperty("string")
+                        if (isinstance(e1_comp_string, int)):
+                            e1_comp_string = '"' + str(e1_comp_string) + '"'
+                        else:
+                            e1_comp_string = '"' + e1_comp_string + '"'
+                     
+            if(len(e2.getPropertyList().getDict()) > 0):
+                e2_comp_string = e2.getPropertyList().getProperty("string")
+                if (isinstance(e2_comp_string, list)):
+                    e2_comp_string = '"' + e2_comp_string[0] + '"'
                 if (e2_comp_string == ""):
                     e2_comp_string = '""'
                             
