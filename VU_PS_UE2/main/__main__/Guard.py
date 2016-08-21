@@ -65,14 +65,14 @@ class Guard(Component):
                 elif (test[x] == ','):
                     if (expIndex == 0):
                         print ("Missing expression in Guard-Command: " + test + "\nPlease check correct Syntax: expression ('='|'#') expression [',' guard]")
-                        return False
+                        return -1
                     e2 = Expression(test[expIndex:x])
                     guardIndex = x+1
                     break
                     
         if(expIndex == 0):
             print ("Missing '=' or '#' found in Guard-Command: " + test + "\nPlease check correct Syntax: expression ('='|'#') expression [',' guard]")
-            return False
+            return -1
                 
         if(guardIndex == 0):
             e2 = Expression(test[expIndex:],self.getParent())
@@ -114,12 +114,12 @@ class Guard(Component):
                     if(g.getInput() != ""):
                         return g.checkSyntax()
                     else:
-                        return True
+                        return 1
             elif(not_equals):
                 if(e1_comp_string != e2.getInput()):
                     if(g.getInput() != ""):
                         return g.checkSyntax()
                     else:
-                        return True
+                        return 1
 
-        return False
+        return 0
