@@ -15,6 +15,7 @@ class Component(object):
         self.input = input
         self.parent = parent # meaning the parent block
         self.property_list = PropertyList()
+        self.syntax_only = False
     
     def setInput(self,input):
         self.input = input
