@@ -1,6 +1,6 @@
 from PropertyList import PropertyList
 import subprocess
-import sys
+#import sys
 
 class StringList(PropertyList, object):
     
@@ -69,11 +69,11 @@ class StringList(PropertyList, object):
         IOSysCallList.addProperty("result",process.returncode)
         return IOSysCallList
     
-    #TODO useful?
+    #the prompt saves its answer
     def promptUserInput(self,string):
-        input = raw_input(string)
+        userinput = raw_input(''.join(string)) #TODO check if string has newline
         #print "Your input " + input + " was saved."
-        inputList = StringList(input)
+        inputList = StringList(userinput)
         return inputList
     
     #directly filled as a property of the string, called as ".length"
