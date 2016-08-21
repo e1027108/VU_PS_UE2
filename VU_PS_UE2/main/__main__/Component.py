@@ -26,6 +26,12 @@ class Component(object):
     def getParent(self):
         return self.parent
     
+    def getSyntaxOnly(self):
+        return self.syntax_only
+    
+    def setSyntaxOnly(self,newvalue):
+        self.syntax_only = newvalue
+    
     @abc.abstractmethod
     def checkSyntax(self):
         pass
