@@ -5,7 +5,6 @@ Created on 21. Juni 2016
 '''
 from Component import Component
 from Expression import Expression
-from numpy import integer
 
 class Guard(Component):
     
