@@ -12,17 +12,19 @@ class Block(Component):
         super(Block,self).__init__(input,parent)
     
     def checkSyntax(self):
-        test = self.getInput().lstrip()
-        test = test.rstrip()
+        test = self.getInput().strip()
         
         if (test[0] == '{') and (test[len(test)-1] == '}'):
             c = Command(test[1:len(test)-1],self) #supposed to put though everything between {}
-            c.setPropertyList(self.property_list) #commands should get access to all already existing propertylists?
+            c.setSyntaxOnly(self.syntax_only)
+            if not self.syntax_only:
+                c.setPropertyList(self.property_list) #commands should get access to all already existing propertylists?
             if c.checkSyntax():
-                cList = c.getPropertyList().getDict()
-                sList = self.property_list.getDict()
-                for prop in cList:
-                    sList.add(prop)
+                if not self.syntax_only:
+                    cList = c.getPropertyList().getDict()
+                    sList = self.property_list.getDict()
+                    for prop in cList:
+                        sList.add(prop)
                 return True
             else:
                 return False
