@@ -64,10 +64,12 @@ class Command(Component):
                 elif (openBrackets == 0) and (test[x] == ';'):
                     #print test[oPI+1:x]
                     e = Expression(test[oPI+1:x],self.getParent())
+                    e.setSyntaxOnly(self.syntax_only)
                     if not e.checkSyntax():
                         return False
                     else:
-                        self.property_list = e.getPropertyList()
+                        if(not e.getSyntaxOnly()):
+                            self.property_list = e.getPropertyList()
                         return True # terminating the execution of the block
             elif not (oPNI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':
@@ -77,30 +79,32 @@ class Command(Component):
                 elif (openBrackets == 0) and (test[x] == ';'):
                     namelength = 0
                     if(test[oPNI] == '*' or test[oPNI].isalpha()):
-                        outerblock = self.countStartOccurrences(test[oPNI:],'*')
+                        if(not self.syntax_only):
+                            outerblock = self.countStartOccurrences(test[oPNI:],'*')
                         namelength = test[oPNI:].index('=')
                     #print test[oPNI:oPNI+namelength]
                     #print test[oPNI+namelength+1:x]
                     e = Expression(test[oPNI+namelength+1:x],self.getParent())
+                    e.setSyntaxOnly(self.syntax_only)
                     if not e.checkSyntax():
                         return False
                     else:
-                        curr = self.getParent()
-                        for x in range (0,outerblock):
-                            curr = curr.getParent()
+                        if(not self.syntax_only):
+                            curr = self.getParent()
+                            for x in range (0,outerblock):
+                                curr = curr.getParent()
                             
-                        name = test[oPNI:oPNI+namelength].rstrip()
-                        name = name.lstrip()
+                                name = test[oPNI:oPNI+namelength].strip()
                         
-                        #TODO should changing of properties change list internal values if list already exists?
-                        if curr == self.getParent():
-                            curr.getPropertyList().addProperty(name,e.getPropertyList())
-                        else:
-                            curr.getPropertyList().changeProperty(name,e.getPropertyList())
+                            if curr == self.getParent():
+                                curr.getPropertyList().addProperty(name,e.getPropertyList())
+                            else:
+                                curr.getPropertyList().changeProperty(name,e.getPropertyList())
+                        
+                            outerblock = 0
                         
                         oPNI = -1
-                        concluded = 1
-                        outerblock = 0        
+                        concluded = 1  
         
         if openBrackets > 0:
             print "There are " + str(openBrackets) + " unclosed brackets in:\n" + test + "\nIt is not a valid list of commands."
@@ -111,15 +115,14 @@ class Command(Component):
           
         return True
         
-    def manageBrackets(self,b,q,v):
-        if(q==0):
-            return (b+v)
+    def manageBrackets(self,openb,quotes,v): #TODO find out what v does again
+        if(quotes==0):
+            return (openb+v)
         else:
-            return b
+            return openb
         
     def checkGuardPart(self,part):        
-        test = part.lstrip()
-        test = test.rstrip()
+        test = part.strip()
         openGuardCount = 0
         colonIndex = -1
         qOpen = 0
@@ -159,8 +162,7 @@ class Command(Component):
             return c.checkSyntax()
         
     def checkAssignmentPart(self,part):
-        test = part.lstrip()
-        test = test.rstrip()
+        test = part.strip()
         noPointerIndex = 0
         
         equalsIndex = test.index('=') #returns index of leftmost '='
@@ -176,6 +178,7 @@ class Command(Component):
         
         right = test[equalsIndex+1:]
         e = Expression(right,self.getParent())
+        e.setSyntaxOnly(self.syntax_only)
         
         if e.checkSyntax() and (self.checkName(left) or (equalsIndex == -1)):
             return True
