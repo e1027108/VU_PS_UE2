@@ -21,7 +21,7 @@ class PropertyList:
         if self.exists(name):
             self.addProperty(name,newValue)
         else:
-            raise KeyError #means code in our language is faulty
+            raise KeyError #TODO means code in our language is faulty, someone should really catch that
     
     def deleteProperty(self,name):
         del self.property_dict[name]        

@@ -57,38 +57,22 @@ class Component(object):
     def getPropertyList(self):
         return self.property_list
     
-    '''
-        TODO check whether this is working as intended, especially check:
-        The left-hand side of + is executed first (starting with a new empty property list),
-        the right-hand side afterward (starting with the result of applying the left-hand side).  
-    '''
     def concatenate(self,op1,op2):
         
         from Block import Block
         
-        tmp1 = None
-        tmp2 = None
-        returnValue = None
-               
-        if isinstance(op1,PropertyList) and isinstance(op2,PropertyList):
-            return self.concatenatePropertyLists(op1,op2)
+        tmp = None
+       
+        if (len(op2.getDict()) == 1) and (self.isBlock(op2.getDict().values()[0])):
+            if (len(op1.getDict()) == 1) and (self.isBlock(op1.getDict().values()[0])):
+                raise KeyError
+            tmp = op2.getDict().values()[0]
+            newBlock = Block(tmp,None)
+            newBlock.setPropertyList(op1.getPropertyList())
+            newBlock.checkSyntax()
+            return newBlock.getPropertyList()
         else:
-            if isinstance(op1,Block):
-                tmp1 = op1.getPropertyList()
-            if isinstance(op2,Block):
-                tmp2 = op2.getPropertyList()
-        
-        if not(tmp1 == None):
-            returnValue = tmp1
-        else:
-            returnValue = op1
-            
-        if not(tmp2 == None):
-            self.concatenate(returnValue,tmp2)
-        else:
-            self.concatenate(returnValue,op2)
-            
-        return returnValue
+            return self.concatenatePropertyLists(op1, op2)
         
     def concatenatePropertyLists(self,op1,op2):
         if not(isinstance(op1,StringList)) and not(isinstance(op2,StringList)):
@@ -98,20 +82,15 @@ class Component(object):
             return newList
         elif isinstance(op1,StringList) and isinstance(op2,StringList):
             newString = StringList("")
-            ######newString.changeProperty("string",op1.getProperty("string").get("string")+op2.getProperty("string").get("string"))
             newString.changeProperty("string",op1.getProperty("string")+op2.getProperty("string"))
             return newString
         else:
             tmp = StringList("")
             if isinstance(op1,StringList):
                 tmp.getDict().update(op2.getDict())
-                #tmp = op2
-                ######tmp.addProperty("string",op1.getProperty("string").get("string"))
                 tmp.changeProperty("string",op1.getProperty("string"))
             else:
-                #tmp = op1
                 tmp.getDict().update(op1.getDict())
-                ######tmp.addProperty("string",op2.getProperty("string").get("string"))
                 tmp.changeProperty("string",op2.getProperty("string"))
             return tmp
             
