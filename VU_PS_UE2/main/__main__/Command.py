@@ -160,27 +160,3 @@ class Command(Component):
             return c.checkSyntax()
         elif guardValue == 1: #check
             return c.checkSyntax()
-        
-    def checkAssignmentPart(self,part):
-        test = part.strip()
-        noPointerIndex = 0
-        
-        equalsIndex = test.index('=') #returns index of leftmost '='
-        
-        for x in range(0,len(test)):
-            if test[x] == '*':
-                continue
-            else:
-                noPointerIndex = x
-                break
-        
-        left = test[noPointerIndex:equalsIndex]
-        
-        right = test[equalsIndex+1:]
-        e = Expression(right,self.getParent())
-        e.setSyntaxOnly(self.syntax_only)
-        
-        if e.checkSyntax() and (self.checkName(left) or (equalsIndex == -1)):
-            return True
-        else:
-            return False
