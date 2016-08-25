@@ -98,12 +98,12 @@ class Command(Component):
                         
                             if curr == self.getParent():
                                 if(namelength != 0 and self.isBlock(expressionString)): #must have found an assignment
-                                    curr.getPropertyList().addProperty(name,StringList(expressionString))
+                                    curr.getPropertyList().addProperty(name,expressionString)
                                 else:
                                     curr.getPropertyList().addProperty(name,e.getPropertyList())
                             else:
                                 if(namelength != 0 and self.isBlock(expressionString)):
-                                    curr.getPropertyList().addProperty(name,StringList(expressionString))
+                                    curr.getPropertyList().changeProperty(name,expressionString)
                                 else:
                                     curr.getPropertyList().changeProperty(name,e.getPropertyList())
                         
