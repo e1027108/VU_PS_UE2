@@ -94,7 +94,7 @@ class Command(Component):
                             for x in range (0,outerblock):
                                 curr = curr.getParent()
                             
-                                name = test[oPNI:oPNI+namelength].strip()
+                            name = test[oPNI:oPNI+namelength].strip()
                         
                             if curr == self.getParent():
                                 curr.getPropertyList().addProperty(name,e.getPropertyList())
