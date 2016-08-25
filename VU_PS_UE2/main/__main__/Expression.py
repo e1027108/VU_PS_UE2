@@ -109,7 +109,7 @@ class Expression(Component):
             if(self.checkPart1(part1)):
                 if (part2 in self.exec_list):
                         self.handleLinuxCommand(part2)
-                if(self.previous != None):
+                if(self.previous != None):                           
                     self.property_list = self.concatenate(self.previous, self.property_list)
         
             
@@ -206,16 +206,19 @@ class Expression(Component):
         
         
             name = test[nameIndex:]
+            if nameIndex == 0:
+                nameIndex = 1
+            
             if(nameIndex > 0):
                 # get prop list of outer blocks
                 
                 # get referred parent block
-                for i in range(0, nameIndex - 1):
+                for i in range(0, nameIndex):
                     parent = self.getParent()        
                     
                 name_helper = name.split(".")
                 
-                if (len(name_helper) > 0):
+                if (len(name_helper) > 1):
                     for i in range(0, len(name_helper)-1):
                         if(parent.property_list.exists(name_helper[i])):
                             prop = parent.property_list.getProperty(name_helper[i])
@@ -235,21 +238,18 @@ class Expression(Component):
                 
                 else:
                     if(parent.property_list.exists(name)):
-                            return True
+                        from StringList import StringList
+                        if(isinstance(parent.getPropertyList().getProperty(name),StringList)):
+                            self.property_list = StringList(parent.getPropertyList().getProperty(name).printString())
+                        else:
+                            self.property_list.addProperty(name,parent.getPropertyList().getProperty(name))
+                        return True
                     else:
-                        parent.property_list.addProperty(name)
+                        self.property_list.addProperty(name,"")
                         return True
                         
                         
-            else:
-                # prop list of current block
-                if(self.property_list.exists(name)):
-                    return True
-                else:
-                    self.property_list.addProperty(name, "")
-                    return True     
-                
-                
+           
     def handleLinuxCommand(self, part2):
         from StringList import StringList
         if(isinstance(self.property_list, StringList)):

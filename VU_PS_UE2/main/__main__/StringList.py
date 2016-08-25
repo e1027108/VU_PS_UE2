@@ -11,8 +11,11 @@ class StringList(PropertyList, object):
 
     def printString(self):
         result = ""
-        for c in self.property_dict["string"]:
-            result += c
+        if(isinstance(self.property_dict["string"], int)):
+            result = str(self.property_dict["string"])
+        else:
+            for c in self.property_dict["string"]:
+                result += c
         return result
     
     #def initializeSystemFunctions(self):
