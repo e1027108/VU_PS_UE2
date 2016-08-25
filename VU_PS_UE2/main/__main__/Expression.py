@@ -84,6 +84,7 @@ class Expression(Component):
                 elif(test[x] == '+' and expIndex == 0):
                     # optional expression
                     e = Expression(test[x+1:],self.getParent())
+                    e.setSyntaxOnly(self.syntax_only)
                     if(nameIndex == 0):
                         part1 = test[:x-1]
                     expIndex = x+1
@@ -96,37 +97,37 @@ class Expression(Component):
         if (expIndex == 0):
             #return (self.checkPart1(part1) and names)
             if(self.checkPart1(part1) and names):
-                if (part2 in self.exec_list):
-                    self.handleLinuxCommand(part2)   
-                    
-                if(self.previous != None):
-                    self.property_list = self.concatenate(self.previous, self.property_list)
-                    
-                                     
+                if(self.syntax_only == False):
+                    if (part2 in self.exec_list):
+                        self.handleLinuxCommand(part2)   
+                        
+                    if(self.previous != None):
+                        self.property_list = self.concatenate(self.previous, self.property_list)
+                        
+                                         
                 return True                    
         else:
             #return (self.checkPart1(part1) and names and e.checkSyntax())
             if(self.checkPart1(part1)):
-                if (part2 in self.exec_list):
-                        self.handleLinuxCommand(part2)
-                if(self.previous != None):                           
-                    self.property_list = self.concatenate(self.previous, self.property_list)
-        
-            
-                e.previous = self.property_list
-                if (names and e.checkSyntax()):
+                if(self.syntax_only == False):
                     if (part2 in self.exec_list):
-                        self.handleLinuxCommand(part2)
-                #self.property_list = self.concatenate(self.property_list, e.getPropertyList())
-                    #self.property_list = self.concatenate(self.property_list, e.getPropertyList())
-                    self.property_list = e.getPropertyList()
-                    
-                    return True
+                            self.handleLinuxCommand(part2)
+                    if(self.previous != None):                           
+                        self.property_list = self.concatenate(self.previous, self.property_list)
+            
                 
+                    e.previous = self.property_list
+                if (names and e.checkSyntax()):
+                    if(self.syntax_only == False):
+                        if (part2 in self.exec_list):
+                            self.handleLinuxCommand(part2)
+                        #self.property_list = self.concatenate(self.property_list, e.getPropertyList())
+                        #self.property_list = self.concatenate(self.property_list, e.getPropertyList())
+                        self.property_list = e.getPropertyList()
+                        
+                    return True                
                 
-                
-        return False        
-       
+        return False               
 
         
     def checkPart1(self, test):
@@ -139,16 +140,20 @@ class Expression(Component):
             from Block import Block
             #print test[0:len(test)]
             b = Block(test[0:len(test)],self.getParent())
+            b.setSyntaxOnly(self.syntax_only)
             if (b.checkSyntax()):
-                self.property_list = b.property_list
+                if(self.syntax_only == False):
+                    self.property_list = b.property_list
                 return True
             else:
-                return False         
+                return False       
         elif (test[0] == '(' and test[len(test)-1] == ')'):
             # this is an expression
             e = Expression(test[1:len(test)-1],self.getParent())
+            e.setSyntaxOnly(self.syntax_only)
             if (e.checkSyntax()):
-                self.property_list = e.property_list
+                if(self.syntax_only == False):
+                    self.property_list = e.property_list
                 return True
             else:
                 return False
@@ -170,11 +175,11 @@ class Expression(Component):
         if len(test) < 1:
             return True
         
-        
-        test = '"' + test + '"'
-        ########self.property_list.addProperty("stringliteral", test)
-        from StringList import StringList
-        self.property_list = StringList(test[1:-1])
+        if(self.syntax_only == False):
+            test = '"' + test + '"'
+            ########self.property_list.addProperty("stringliteral", test)
+            from StringList import StringList
+            self.property_list = StringList(test[1:-1])
         return True
     
     def checkAsterisk(self, part):
@@ -191,19 +196,14 @@ class Expression(Component):
                 otherIndex = x-1
                 break
             
-        ### sollte nicht immer leere Property erstellen
-#         if(otherIndex != len(test)):              
-#             if(self.checkName(test[nameIndex:otherIndex])):
-#                 name = test[nameIndex:otherIndex]
-#                 self.property_list.addProperty(name, '""')
-#                 return True
-#         elif(self.checkName(test[nameIndex:])):
-#             name = test[nameIndex:]
-#             self.property_list.addProperty(name, '""')
-#             return True
-#         return False
-        ###
         
+        if(otherIndex != len(test)):              
+            if(self.checkName(test[nameIndex:otherIndex])):
+                return True
+        elif(self.checkName(test[nameIndex:])):
+            return True
+        
+        if(self.syntax_only == False):
         
             name = test[nameIndex:]
             if nameIndex == 0:
@@ -247,7 +247,7 @@ class Expression(Component):
                     else:
                         self.property_list.addProperty(name,"")
                         return True
-                        
+        return False
                         
            
     def handleLinuxCommand(self, part2):
