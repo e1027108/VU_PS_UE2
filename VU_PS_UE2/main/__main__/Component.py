@@ -123,3 +123,9 @@ class Component(object):
             else:
                 break
         return count
+    
+    def isBlock(self,potentialBlock):
+        if potentialBlock[0] == '{' and potentialBlock[len(potentialBlock)-1] == '}':
+            return True
+        else:
+            return False

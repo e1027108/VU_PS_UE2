@@ -120,12 +120,6 @@ class Command(Component):
             return False
           
         return True
-    
-    def isBlock(self,potentialBlock):
-        if potentialBlock[0] == '{' and potentialBlock[len(potentialBlock)-1] == '}':
-            return True
-        else:
-            return False
         
     def manageBrackets(self,openb,quotes,v): #TODO find out what v does again
         if(quotes==0):
