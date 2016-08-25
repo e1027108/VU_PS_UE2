@@ -6,6 +6,7 @@ Created on 20. Juni 2016
 from Component import Component
 from Expression import Expression
 from Guard import Guard
+from StringList import StringList
 
 class Command(Component):
     
@@ -81,10 +82,9 @@ class Command(Component):
                     if(test[oPNI] == '*' or test[oPNI].isalpha()):
                         if(not self.syntax_only):
                             outerblock = self.countStartOccurrences(test[oPNI:],'*')
-                        namelength = test[oPNI:].index('=')
-                    #print test[oPNI:oPNI+namelength]
-                    #print test[oPNI+namelength+1:x]
-                    e = Expression(test[oPNI+namelength+1:x],self.getParent())
+                        namelength = test[oPNI:].index('=')+1
+                    expressionString = test[oPNI+namelength:x].strip()
+                    e = Expression(expressionString,self.getParent())
                     e.setSyntaxOnly(self.syntax_only)
                     if not e.checkSyntax():
                         return False
@@ -94,12 +94,18 @@ class Command(Component):
                             for x in range (0,outerblock):
                                 curr = curr.getParent()
                             
-                            name = test[oPNI:oPNI+namelength].strip()
+                            name = test[oPNI:oPNI+namelength-1].strip()
                         
                             if curr == self.getParent():
-                                curr.getPropertyList().addProperty(name,e.getPropertyList())
+                                if(namelength != 0 and self.isBlock(expressionString)): #must have found an assignment
+                                    curr.getPropertyList().addProperty(name,StringList(expressionString))
+                                else:
+                                    curr.getPropertyList().addProperty(name,e.getPropertyList())
                             else:
-                                curr.getPropertyList().changeProperty(name,e.getPropertyList())
+                                if(namelength != 0 and self.isBlock(expressionString)):
+                                    curr.getPropertyList().addProperty(name,StringList(expressionString))
+                                else:
+                                    curr.getPropertyList().changeProperty(name,e.getPropertyList())
                         
                             outerblock = 0
                         
@@ -114,6 +120,12 @@ class Command(Component):
             return False
           
         return True
+    
+    def isBlock(self,potentialBlock):
+        if potentialBlock[0] == '{' and potentialBlock[len(potentialBlock)-1] == '}':
+            return True
+        else:
+            return False
         
     def manageBrackets(self,openb,quotes,v): #TODO find out what v does again
         if(quotes==0):
