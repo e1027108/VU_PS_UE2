@@ -23,8 +23,7 @@ class Block(Component):
                 if not self.syntax_only:
                     cList = c.getPropertyList().getDict()
                     sList = self.property_list.getDict()
-                    for prop in cList:
-                        sList.add(prop)
+                    sList.update(cList)
                 return True
             else:
                 return False
