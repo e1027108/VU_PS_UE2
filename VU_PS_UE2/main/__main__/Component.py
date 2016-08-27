@@ -67,7 +67,7 @@ class Component(object):
             if (len(op1.getDict()) == 1) and (self.isBlock(op1.getDict().values()[0])):
                 raise KeyError
             tmp = op2.getDict().values()[0]
-            newBlock = Block(tmp,None)
+            newBlock = Block(tmp,self)
             newBlock.setPropertyList(op1)
             newBlock.checkSyntax()
             return newBlock.getPropertyList()

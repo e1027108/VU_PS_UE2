@@ -206,15 +206,15 @@ class Expression(Component):
         if(self.syntax_only == False):
         
             name = test[nameIndex:]
-            if nameIndex == 0:
-                nameIndex = 1
-            
-            if(nameIndex > 0):
-                # get prop list of outer blocks
+#
+            parent = self.getParent() 
+            if(nameIndex > -1):
+  
                 
                 # get referred parent block
+               
                 for i in range(0, nameIndex):
-                    parent = self.getParent()        
+                    parent = parent.getParent()        
                     
                 name_helper = name.split(".")
                 
