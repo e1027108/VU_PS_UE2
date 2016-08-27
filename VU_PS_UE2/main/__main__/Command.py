@@ -85,7 +85,10 @@ class Command(Component):
                         namelength = test[oPNI:].index('=')+1
                     expressionString = test[oPNI+namelength:x].strip()
                     e = Expression(expressionString,self.getParent())
-                    e.setSyntaxOnly(self.syntax_only)
+                    if (self.isBlock(expressionString)):
+                        e.setSyntaxOnly(True)
+                    else:
+                        e.setSyntaxOnly(self.syntax_only)
                     if not e.checkSyntax():
                         return False
                     else:

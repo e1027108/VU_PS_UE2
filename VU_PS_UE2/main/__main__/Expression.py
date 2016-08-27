@@ -198,10 +198,10 @@ class Expression(Component):
             
         
         if(otherIndex != len(test)):              
-            if(self.checkName(test[nameIndex:otherIndex])):
-                return True
-        elif(self.checkName(test[nameIndex:])):
-            return True
+            if not (self.checkName(test[nameIndex:otherIndex])):
+                return False
+        elif not(self.checkName(test[nameIndex:])):
+            return False
         
         if(self.syntax_only == False):
         
@@ -247,7 +247,7 @@ class Expression(Component):
                     else:
                         self.property_list.addProperty(name,"")
                         return True
-        return False
+        return True
                         
            
     def handleLinuxCommand(self, part2):

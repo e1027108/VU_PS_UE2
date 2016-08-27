@@ -61,12 +61,14 @@ class Guard(Component):
                     if(test[x] == '#'):
                         not_equals = False
                     e1 = Expression(test[:x-1],self.getParent())
+                    e1.setSyntaxOnly(self.syntax_only)
                     expIndex = x+2
                 elif (test[x] == ','):
                     if (expIndex == 0):
                         print ("Missing expression in Guard-Command: " + test + "\nPlease check correct Syntax: expression ('='|'#') expression [',' guard]")
                         return -1
                     e2 = Expression(test[expIndex:x])
+                    e2.setSyntaxOnly(self.syntax_only)
                     guardIndex = x+1
                     break
                     
@@ -76,11 +78,26 @@ class Guard(Component):
                 
         if(guardIndex == 0):
             e2 = Expression(test[expIndex:],self.getParent())
+            e2.setSyntaxOnly(self.syntax_only)
             g = Guard("",self.getParent())
+            g.setSyntaxOnly(self.syntax_only)
         else:
             g = Guard(test[guardIndex:],self.getParent())
+            g.setSyntaxOnly(self.syntax_only)
         
-        return (self.checkSemantic(e1,e2,g,equals,not_equals))
+        if not self.syntax_only:
+            return (self.checkSemantic(e1,e2,g,equals,not_equals))
+        else:            
+            if(g.getInput() != ""):
+                if (e1.checkSyntax() and e2.checkSyntax() and g.checkSyntax()):
+                    return 1
+                else:
+                    return -1
+            else:
+                if (e1.checkSyntax() and e2.checkSyntax()):
+                    return 1
+                else:
+                    return -1
         
     def checkSemantic(self,e1,e2,g,equals,not_equals):
         
@@ -96,7 +113,7 @@ class Guard(Component):
                 if (e1.getInput() in self.parent.getPropertyList().getDict()):
                     e1_comp_string = self.parent.getPropertyList().getProperty(e1.getInput())
                     if(isinstance(e1_comp_string, StringList)):
-                        e1_comp_string = e1_comp_string.getProperty("string")
+                        e1_comp_string = e1_comp_string.printString()
                         if (isinstance(e1_comp_string, int)):
                             e1_comp_string = '"' + str(e1_comp_string) + '"'
                         else:

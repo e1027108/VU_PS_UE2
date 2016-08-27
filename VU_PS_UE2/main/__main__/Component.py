@@ -68,7 +68,7 @@ class Component(object):
                 raise KeyError
             tmp = op2.getDict().values()[0]
             newBlock = Block(tmp,None)
-            newBlock.setPropertyList(op1.getPropertyList())
+            newBlock.setPropertyList(op1)
             newBlock.checkSyntax()
             return newBlock.getPropertyList()
         else:
@@ -104,7 +104,8 @@ class Component(object):
         return count
     
     def isBlock(self,potentialBlock):
-        if potentialBlock[0] == '{' and potentialBlock[len(potentialBlock)-1] == '}':
-            return True
+        if (isinstance(potentialBlock,basestring) and len(potentialBlock) > 0):            
+            if (potentialBlock[0] == '{' and potentialBlock[len(potentialBlock)-1] == '}'):
+                return True
         else:
             return False

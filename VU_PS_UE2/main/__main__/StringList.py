@@ -13,6 +13,8 @@ class StringList(PropertyList, object):
         result = ""
         if(isinstance(self.property_dict["string"], int)):
             result = str(self.property_dict["string"])
+#             if(result[0] == "'" & result[-1] == "'"):
+#                 result = result[1:-1]
         else:
             for c in self.property_dict["string"]:
                 result += c
