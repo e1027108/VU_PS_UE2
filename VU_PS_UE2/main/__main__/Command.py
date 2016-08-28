@@ -70,7 +70,7 @@ class Command(Component):
                         return False
                     else:
                         if(not e.getSyntaxOnly()):
-                            self.property_list = e.getPropertyList()
+                            self.getParent().setPropertyList(e.getPropertyList())
                             self.getParent().setSyntaxOnly(True)
                         return True # terminating the execution of the block
             elif not (oPNI == -1):
