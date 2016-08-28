@@ -71,6 +71,7 @@ class Command(Component):
                     else:
                         if(not e.getSyntaxOnly()):
                             self.property_list = e.getPropertyList()
+                            self.getParent().setSyntaxOnly(True)
                         return True # terminating the execution of the block
             elif not (oPNI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':
