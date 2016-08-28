@@ -82,7 +82,8 @@ class Command(Component):
                     if(test[oPNI] == '*' or test[oPNI].isalpha()):
                         if(not self.syntax_only):
                             outerblock = self.countStartOccurrences(test[oPNI:],'*')
-                        namelength = test[oPNI:].index('=')+1
+                        if '=' in test[oPNI:]:
+                            namelength = test[oPNI:].index('=')+1
                     expressionString = test[oPNI+namelength:x].strip()
                     e = Expression(expressionString,self.getParent())
                     if (self.isBlock(expressionString)):
