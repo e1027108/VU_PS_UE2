@@ -49,28 +49,19 @@ class StringList(PropertyList, object):
         return process.returncode #this writes return code to "syscall"
     
     #"out", "err" and "result" saved in new property list, print output?
-    def doLinuxIOSysCall(self,string):
+    def doLinuxIOSysCall(self, string, in_string):
         IOSysCallList = PropertyList()
-        process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-        
-        fullOutput = ""
-        fullError = ""
-        
-        line = process.stdout.readline()
-        fullOutput += line
-        while line:
-            line = process.stdout.readline()
-            fullOutput += line
-            
-        line = process.stderr.readline()
-        fullError += line
-        while line:
-            line = process.stderr.readline()
-            fullError += line
-        
+        if(string.startswith("echo")):
+            string += ' ' + in_string;
+            in_string = ""
+        process = subprocess.Popen(''.join(string).split(),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        if(in_string != ""):
+            fullOutput, fullError = process.communicate(in_string + ' \n')
+        else:
+            fullOutput, fullError = process.communicate()
+                            
         IOSysCallList.addProperty("out",fullOutput)
         IOSysCallList.addProperty("err",fullError)
-        process.communicate()[0]
         IOSysCallList.addProperty("result",process.returncode)
         return IOSysCallList
     
