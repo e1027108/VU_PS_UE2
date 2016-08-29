@@ -37,8 +37,7 @@ class Component(object):
         pass
     
     def checkName(self,part):
-        test = part.lstrip()
-        test = test.rstrip()
+        test = part.strip()
         
         if not (test[0].isalpha()):
             print "'" + test[0] + "' is not a letter. It can not be at the beginning of a name."
@@ -69,6 +68,7 @@ class Component(object):
             tmp = op2.getDict().values()[0]
             newBlock = Block(tmp,self)
             newBlock.setPropertyList(op1)
+            newBlock.setSyntaxOnly(self.syntax_only)
             newBlock.checkSyntax()
             return newBlock.getPropertyList()
         else:

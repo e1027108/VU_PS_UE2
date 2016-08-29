@@ -14,8 +14,9 @@ class Command(Component):
         super(Command,self).__init__(input,parent)
     
     def checkSyntax(self):
-        test = self.input.lstrip()
-        test = test.rstrip()
+
+        test = self.input.strip()
+        #print test
         
         oBI = -1 #openBracketIndex
         oPNI = -1 #openPointerOrNameIndex
@@ -48,14 +49,16 @@ class Command(Component):
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
                     concluded = 0
             elif not (oBI == -1):
-                if test[x] == '[':
+                if test[x] == '[' or test[x] == '{' or test[x] == '(':
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
-                elif test[x] == ']':
-                    if openBrackets == 1:
+                elif test[x] == ']' or test[x] == '}' or test[x] == ')':
+                    if openBrackets == 1 and test[x] == ']':
                         if not self.checkGuardPart(test[oBI:x+1]): # on true handling below
                             return False
                         else:       
                             oBI = -1
+                            concluded = 1
+                        self.syntax_only = self.getParent().getSyntaxOnly()
                     openBrackets = self.manageBrackets(openBrackets,qOpen,-1)
             elif not (oPI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':
@@ -63,16 +66,21 @@ class Command(Component):
                 elif test[x] == '}' or test[x] == ']' or test[x] == ')':
                     openBrackets = self.manageBrackets(openBrackets,qOpen,-1)
                 elif (openBrackets == 0) and (test[x] == ';'):
-                    #print test[oPI+1:x]
                     e = Expression(test[oPI+1:x],self.getParent())
                     e.setSyntaxOnly(self.syntax_only)
+
                     if not e.checkSyntax():
                         return False
                     else:
-                        if(not e.getSyntaxOnly()):
-                            self.getParent().setPropertyList(e.getPropertyList())
+                        if(not self.syntax_only):
+                            eList = e.getPropertyList()
+                            self.getParent().setPropertyList(eList)#TODO choose one?
+                            self.property_list = eList
+                            
                             self.getParent().setSyntaxOnly(True)
-                        return True # terminating the execution of the block
+                    oPI = -1
+                    concluded = 1
+                    self.syntax_only = self.getParent().getSyntaxOnly()
             elif not (oPNI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
@@ -89,6 +97,7 @@ class Command(Component):
                     e = Expression(expressionString,self.getParent())
                     if (self.isBlock(expressionString)):
                         e.setSyntaxOnly(True)
+                        #TODO make it not ignore everything after the second-to-last bracket-ending
                     else:
                         e.setSyntaxOnly(self.syntax_only)
                     if not e.checkSyntax():
@@ -115,7 +124,8 @@ class Command(Component):
                             outerblock = 0
                         
                         oPNI = -1
-                        concluded = 1  
+                        concluded = 1
+                        self.syntax_only = self.getParent().getSyntaxOnly()
         
         if openBrackets > 0:
             print "There are " + str(openBrackets) + " unclosed brackets in:\n" + test + "\nIt is not a valid list of commands."
@@ -162,6 +172,9 @@ class Command(Component):
         g = Guard(test[1:colonIndex],self.getParent())
         c = Command(test[colonIndex+1:len(test)-1],self.getParent())
         
+        c.setSyntaxOnly(self.syntax_only)
+        g.setSyntaxOnly(self.syntax_only)
+        
         guardValue = g.checkSyntax()
         
         if guardValue == -1: #syntax problem
@@ -169,5 +182,5 @@ class Command(Component):
         elif guardValue == 0: #semantically wrong i.e. the "program" guard returns false
             c.setSyntaxOnly(True)
             return c.checkSyntax()
-        elif guardValue == 1: #check
+        elif guardValue == 1: #means we generally want to do what's after the guard
             return c.checkSyntax()
