@@ -58,7 +58,8 @@ class Command(Component):
                         else:       
                             oBI = -1
                             concluded = 1
-                        self.syntax_only = self.getParent().getSyntaxOnly()
+                        if not self.syntax_only:
+                            self.syntax_only = self.getParent().getSyntaxOnly()
                     openBrackets = self.manageBrackets(openBrackets,qOpen,-1)
             elif not (oPI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':
@@ -80,7 +81,8 @@ class Command(Component):
                             self.getParent().setSyntaxOnly(True)
                     oPI = -1
                     concluded = 1
-                    self.syntax_only = self.getParent().getSyntaxOnly()
+                    if not self.syntax_only:
+                        self.syntax_only = self.getParent().getSyntaxOnly()
             elif not (oPNI == -1):
                 if test[x] == '{' or test[x] == '[' or test[x] == '(':
                     openBrackets = self.manageBrackets(openBrackets,qOpen,1)
@@ -97,7 +99,6 @@ class Command(Component):
                     e = Expression(expressionString,self.getParent())
                     if (self.isBlock(expressionString)):
                         e.setSyntaxOnly(True)
-                        #TODO make it not ignore everything after the second-to-last bracket-ending
                     else:
                         e.setSyntaxOnly(self.syntax_only)
                     if not e.checkSyntax():
@@ -125,7 +126,8 @@ class Command(Component):
                         
                         oPNI = -1
                         concluded = 1
-                        self.syntax_only = self.getParent().getSyntaxOnly()
+                        if not self.syntax_only:
+                            self.syntax_only = self.getParent().getSyntaxOnly()
         
         if openBrackets > 0:
             print "There are " + str(openBrackets) + " unclosed brackets in:\n" + test + "\nIt is not a valid list of commands."
@@ -155,7 +157,7 @@ class Command(Component):
                 else:
                     qOpen = 1
             
-            if (test[x] == ':') and (openGuardCount == 1):
+            if (test[x] == ':') and (openGuardCount == 1) and (qOpen == 0):
                 if not (colonIndex == -1):
                     print "Only one ':' is allowed, invalid command: " + test
                     return False
