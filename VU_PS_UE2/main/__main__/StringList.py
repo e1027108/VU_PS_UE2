@@ -40,10 +40,12 @@ class StringList(PropertyList, object):
         
         line = process.stdout.readline()
         while line:
-            print line.rstrip('\n')
+            if len(line) is not 0:
+                print line.rstrip('\n')
             line = process.stdout.readline()
             
-        print line.rstrip('\n')
+        if len(line) is not 0:
+            print line.rstrip('\n')
         
         process.communicate()[0]
         return process.returncode #this writes return code to "syscall"
