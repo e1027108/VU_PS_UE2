@@ -9,7 +9,7 @@ class Expression(Component):
     
     def __init__(self,input,parent):
         self.previous = None
-        self.exec_list = {"syscall", "iosyscall"}
+        self.exec_list = {"syscall", "iosyscall", "userinput", "length", "trim", "isnumeric"}
         super(Expression,self).__init__(input,parent)
         
     def setPrevious(self, prop_list):
@@ -265,3 +265,13 @@ class Expression(Component):
             if(part2 == "iosyscall"):
                 syscallList = self.property_list.doLinuxIOSysCall(self.property_list.printString(),self.previous.getProperty("in").printString())
                 self.property_list = syscallList
+            if(part2 == "userinput"):
+                inputList = self.property_list.promptUserInput(self.property_list.printString())
+                self.property_list = inputList
+            if(part2 == "length"):
+                self.property_list.stringLength(self.property_list.printString())
+            if(part2 == "trim"):
+                self.property_list.trim(self.property_list.printString())
+            if(part2 == "isnumeric"):
+                self.property_list.isnumeric(self.property_list.printString())
+                
