@@ -20,20 +20,6 @@ class StringList(PropertyList, object):
                 result += c
         return result
     
-    #def initializeSystemFunctions(self):
-    #    self.sysCall()
-    #    self.IOSysCall()
-        
-    def sysCall(self):
-        self.property_dict.update({"syscall",self.doLinuxSysCall(self.getProperty("string"))})
-        
-    def IOSysCall(self):
-        self.property_dict.update({"iosyscall",self.doLinuxIOSysCall(self.getProperty("string"))})
-        
-    #There is supposed to be a prompt in the file, for which an input is gathered
-    def userInput(self):
-        self.property_dict.update({"userinput",self.promptUserInput(self.getProperty("string"))})
-        
     #printing everything and just returning one value
     def doLinuxSysCall(self,string):
         process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
@@ -63,7 +49,9 @@ class StringList(PropertyList, object):
             fullOutput, fullError = process.communicate()
         
         if(fullOutput[-1] == '\n'):
-            fullOutput = fullOutput[:-1]                 
+            fullOutput = fullOutput[:-1]
+            
+        print fullOutput                 
         IOSysCallList.addProperty("out",fullOutput)
         IOSysCallList.addProperty("err",fullError)
         IOSysCallList.addProperty("result",process.returncode)
