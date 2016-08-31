@@ -59,7 +59,9 @@ class StringList(PropertyList, object):
             fullOutput, fullError = process.communicate(in_string + ' \n')
         else:
             fullOutput, fullError = process.communicate()
-                            
+        
+        if(fullOutput[-1] == '\n'):
+            fullOutput = fullOutput[:-1]                 
         IOSysCallList.addProperty("out",fullOutput)
         IOSysCallList.addProperty("err",fullError)
         IOSysCallList.addProperty("result",process.returncode)

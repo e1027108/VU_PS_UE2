@@ -96,10 +96,13 @@ class Expression(Component):
         
         if (expIndex == 0):
             #return (self.checkPart1(part1) and names)
+            if(not(part2 in self.exec_list) and part2 != None):
+                part1 = test
             if(self.checkPart1(part1) and names):
                 if(self.syntax_only == False):
                     if (part2 in self.exec_list):
-                        self.handleLinuxCommand(part2)   
+                        self.handleLinuxCommand(part2)
+                    
                         
                     if(self.previous != None):
                         self.property_list = self.concatenate(self.previous, self.property_list)
@@ -230,8 +233,11 @@ class Expression(Component):
                             else:
                                 return False
                             
-                    if(parent.property_list.exists(name_helper[len(name_helper)-1])):
-                        self.property_list.addProperty(name_helper[len(name_helper)-1], prop)
+                    if(parent.exists(name_helper[len(name_helper)-1])):
+                        #self.property_list.addProperty(name, parent.getProperty(name_helper[len(name_helper)-1]))
+                        #self.property_list.addProperty("string", parent.getProperty(name_helper[len(name_helper)-1]))
+                        from StringList import StringList
+                        self.property_list = StringList(str(parent.getProperty(name_helper[len(name_helper)-1])))
                         return True
                     else:
                         return False

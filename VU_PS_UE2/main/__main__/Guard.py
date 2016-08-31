@@ -108,16 +108,25 @@ class Guard(Component):
             
             e1_comp_string = '""'
             e2_comp_string = '""'
-            
-            if(len(self.parent.getPropertyList().getDict()) > 0):
-                if (e1.getInput() in self.parent.getPropertyList().getDict()):
-                    e1_comp_string = self.parent.getPropertyList().getProperty(e1.getInput())
-                    if(isinstance(e1_comp_string, StringList)):
-                        e1_comp_string = e1_comp_string.printString()
-                        if (isinstance(e1_comp_string, int)):
-                            e1_comp_string = '"' + str(e1_comp_string) + '"'
-                        else:
-                            e1_comp_string = '"' + e1_comp_string + '"'
+
+            names = e1.getInput().split(".")
+            if(len(e1.property_list.getDict()) > 0):
+                if((len(e1.property_list.getDict()) == 1) and e1.property_list.exists("string")):
+                    if(isinstance(e1.property_list.getProperty("string"), int)):
+                        e1_comp_string = e1.property_list.getProperty("string")
+                    else:
+                        e1_comp_string = e1.property_list.getProperty("string")[0]
+                else:
+                    prop = e1.property_list.getProperty(e1.getInput())
+                    e1_comp_string = prop
+
+                if(isinstance(e1_comp_string, StringList)):
+                    e1_comp_string = e1_comp_string.printString()
+                    
+                if (isinstance(e1_comp_string, int)):
+                    e1_comp_string = '"' + str(e1_comp_string) + '"'
+                else:
+                    e1_comp_string = '"' + e1_comp_string + '"'
                      
             if(len(e2.getPropertyList().getDict()) > 0):
                 e2_comp_string = e2.getPropertyList().getProperty("string")
