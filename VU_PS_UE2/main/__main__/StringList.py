@@ -1,6 +1,6 @@
 from PropertyList import PropertyList
 import subprocess
-#import sys
+import sys
 
 class StringList(PropertyList, object):
     
@@ -22,8 +22,15 @@ class StringList(PropertyList, object):
     
     #printing everything and just returning one value
     def doLinuxSysCall(self,string):
-        process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
+        process = None
         
+        try:
+            process = subprocess.Popen(''.join(string).split(),stdout=subprocess.PIPE)
+        except OSError:
+            print "Can not execute syscall for input: " + str(string) + \
+            "\nThe reason could be mismatched brackets for the syscall argument or the syscall doesn't exist."
+            sys.exit()
+                
         line = process.stdout.readline()
         while line:
             if len(line) is not 0:
@@ -42,7 +49,16 @@ class StringList(PropertyList, object):
         if(string.startswith("echo")):
             string += ' ' + in_string;
             in_string = ""
-        process = subprocess.Popen(''.join(string).split(),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        
+        process = None
+        
+        try:
+            process = subprocess.Popen(''.join(string).split(),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        except OSError:
+            print "Can not execute iosyscall for input: " + str(string) + \
+            str(in_string) + ".\nMaybe the system doesn't support that function!"
+            sys.exit()
+            
         if(in_string != ""):
             fullOutput, fullError = process.communicate(in_string + ' \n')
         else:
