@@ -262,8 +262,6 @@ class Expression(Component):
             if(part2 == "syscall"):
                 returnCode = self.property_list.doLinuxSysCall(self.property_list.printString())
                 self.property_list.changeProperty("string", returnCode)
-                print returnCode
             if(part2 == "iosyscall"):
                 syscallList = self.property_list.doLinuxIOSysCall(self.property_list.printString(),self.previous.getProperty("in").printString())
                 self.property_list = syscallList
-                print syscallList.getProperty("out")
