@@ -1,5 +1,28 @@
 %idea for this program:
-%no idea as of yet
+%prime factor computation
 {
-
+	%read userinput (needs a second line break?)
+	%input = "Please input a positive number to compute its prime factors!".userinput;
+	%{ in = *input.userinput; } + "echo ".iosyscall;
+	
+	%function to compute rest
+	computeRest = {
+		modulo = dividend + "%" + divisor;
+		rest = { in = *modulo; } + "bc".iosyscall; %putting 'dividend + "%" + divisor' in here directly doesn't work!
+		%[ rest.result = "0" : 
+		%	[ rest.err = "" : ^rest.out; ] 
+		%]
+		[ rest.result = "0" : ^rest.out; ]
+		^ "-1";
+	} ;
+	
+	%this will compute prime factors, but doesn't even print the computeRest function ath the moment
+	computePrimeFactors = {
+		{ in = *cr; } + "echo".iosyscall;
+		rest = { dividend = *dividend; divisor = *divisor; } + *computeRest;
+		^rest;
+	} ;
+	
+	test = { dividend = "5"; divisor = "3"; cr = *computeRest; } + computePrimeFactors;
+	
 }
