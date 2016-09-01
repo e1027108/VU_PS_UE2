@@ -117,8 +117,6 @@ class Guard(Component):
                     elif(isinstance(e1.property_list.getProperty("string"),list)):
                         if(len(e1.property_list.getProperty("string")) > 0):
                             e1_comp_string = e1.property_list.getProperty("string")[0]
-                        else:
-                            e1_comp_string = '""'
                 else:
                     prop = e1.property_list.getProperty(e1.getInput())
                     e1_comp_string = prop
