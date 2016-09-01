@@ -114,8 +114,11 @@ class Guard(Component):
                 if((len(e1.property_list.getDict()) == 1) and e1.property_list.exists("string")):
                     if(isinstance(e1.property_list.getProperty("string"), int)):
                         e1_comp_string = e1.property_list.getProperty("string")
-                    else:
-                        e1_comp_string = e1.property_list.getProperty("string")[0]
+                    elif(isinstance(e1.property_list.getProperty("string"),list)):
+                        if(len(e1.property_list.getProperty("string")) > 0):
+                            e1_comp_string = e1.property_list.getProperty("string")[0]
+                        else:
+                            e1_comp_string = '""'
                 else:
                     prop = e1.property_list.getProperty(e1.getInput())
                     e1_comp_string = prop
@@ -126,7 +129,8 @@ class Guard(Component):
                 if (isinstance(e1_comp_string, int)):
                     e1_comp_string = '"' + str(e1_comp_string) + '"'
                 else:
-                    e1_comp_string = '"' + e1_comp_string + '"'
+                    if(e1_comp_string != '""'):
+                        e1_comp_string = '"' + e1_comp_string + '"'
                      
             if(len(e2.getPropertyList().getDict()) > 0):
                 e2_comp_string = e2.getPropertyList().getProperty("string")
