@@ -64,8 +64,7 @@ class StringList(PropertyList, object):
         else:
             fullOutput, fullError = process.communicate()
         
-        if(fullOutput[-1] == '\n'):
-            fullOutput = fullOutput[:-1]
+        fullOutput = fullOutput.rstrip('\n')
             
         print fullOutput                 
         IOSysCallList.addProperty("out",fullOutput)
