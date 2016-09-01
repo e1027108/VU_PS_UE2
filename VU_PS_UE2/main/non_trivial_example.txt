@@ -2,27 +2,27 @@
 %prime factor computation
 {
 	%read userinput (needs a second line break?)
-	%input = "Please input a positive number to compute its prime factors!".userinput;
+	input = "Please input a positive number to compute its prime factors!".userinput;
 	%{ in = *input.userinput; } + "echo ".iosyscall;
 	
 	%function to compute rest
 	computeRest = {
-		modulo = dividend + "%" + divisor;
-		rest = { in = *modulo; } + "bc".iosyscall; %putting 'dividend + "%" + divisor' in here directly doesn't work!
-		%[ rest.result = "0" : 
-		%	[ rest.err = "" : ^rest.out; ] 
-		%]
-		[ rest.result = "0" : ^rest.out; ]
+		rest = { in = *dividend + "%" + *divisor; } + "bc".iosyscall;
+		[ rest.result = "0" : 
+			[ rest.err = "" : ^rest.out; ]
+		]
 		^ "-1";
 	} ;
 	
-	%this will compute prime factors, but doesn't even print the computeRest function ath the moment
+	%add more recursiveness to get all prime factors
 	computePrimeFactors = {
-		{ in = *cr; } + "echo".iosyscall;
-		rest = { dividend = *dividend; divisor = *divisor; } + *computeRest;
+		rest = { dividend = *dividend; divisor = "2"; } + **computeRest;
 		^rest;
 	} ;
+
+	test = {dividend = *input;} + computePrimeFactors;
 	
-	test = { dividend = "5"; divisor = "3"; cr = *computeRest; } + computePrimeFactors;
+	%this should print all the prime factors, obviously currently its just the rest modulo 2
+	{ in = "The prime factors of " + *input + " are " + *test; } + "echo".iosyscall;
 	
 }
