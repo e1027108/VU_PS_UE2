@@ -3,7 +3,8 @@ Created on 21. Juni 2016
 
 @author: raidsnail
 '''
-from Component import Component   
+from Component import Component
+import sys
 
 class Expression(Component):
     
@@ -263,6 +264,17 @@ class Expression(Component):
                 returnCode = self.property_list.doLinuxSysCall(self.property_list.printString())
                 self.property_list.changeProperty("string", returnCode)
             if(part2 == "iosyscall"):
+                if(self.property_list.printString() == ""):
+                    print("Cannot execute iosyscall on empty string!")
+                    sys.exit()
+                if(self.previous == None):
+                    print("Cannot execute iosyscall for '" + self.property_list.printString() + 
+                          "'\nThere is a block with an inputstream missing!")
+                    sys.exit()
+                if not(self.previous.exists("in")):
+                    print("Cannot execute iosyscall for '" + self.property_list.printString() +
+                          "'\nThere is an inputstream missing in the previous block section!")
+                    sys.exit()
                 syscallList = self.property_list.doLinuxIOSysCall(self.property_list.printString(),self.previous.getProperty("in").printString())
                 self.property_list = syscallList
             if(part2 == "userinput"):
