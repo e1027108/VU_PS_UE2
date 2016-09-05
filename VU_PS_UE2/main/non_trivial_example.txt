@@ -2,27 +2,50 @@
 %prime factor computation
 {
 	%read userinput (needs a second line break?)
-	input = "Please input a positive number to compute its prime factors!".userinput;
+	input = "Please input a positive number to compute its prime factors!".userinput; %waits before checking sytax further?
 	%{ in = *input.userinput; } + "echo ".iosyscall;
 	
-	%function to compute rest
-	computeRest = {
-		rest = { in = *dividend + "%" + *divisor; } + "bc".iosyscall;
-		[ rest.result = "0" : 
-			[ rest.err = "" : ^rest.out; ]
-		]
-		^ "-1";
-	} ;
-	
-	%add more recursiveness to get all prime factors
+	%computes all prime factors
 	computePrimeFactors = {
-		rest = { dividend = *dividend; divisor = "2"; } + **computeRest;
-		^rest;
+	
+		%computes (quite naively) the smallest prime factor
+		getSmallestPrimeFactor = {
+		
+			%get the rest by modulo
+			computeRest = {
+				rest = { in = *dividend + "%" + *divisor; } + "bc".iosyscall;
+				[ rest.result = "0" : 
+					[ rest.err = "" : ^rest.out; ]
+				]
+				^ "-1"; %TODO do something with this
+			} ;
+	
+			rest = { dividend = *dividend; divisor = *divisor; } + computeRest; %TODO **
+			[ rest = "-1" : 
+				^ rest;
+			]
+			[ rest = "0" : 
+				^ divisor;
+			]
+			plusOne = { in = *divisor + "+1"; } + "bc".iosyscall;
+			newDivisor = plusOne.out;
+			^ { dividend = *dividend; divisor = *newDivisor; } + *getSmallestPrimeFactor;
+		} ;
+	
+		factors = "";
+		smallest = { dividend = *dividend; divisor = "2"; } + getSmallestPrimeFactor;
+		result = { in = *dividend + "/" + *smallest; } + "bc".iosyscall;
+		result = result.out;
+		factors = factors + " " + smallest;
+		[ result = "1" :
+			^ factors;
+		]
+		newFactors = { dividend = *result; divisor = "2"; } + *computePrimeFactors;
+		factors = factors + ", " + newFactors;
+		^ factors;
 	} ;
 
 	test = {dividend = *input;} + computePrimeFactors;
-	
-	%this should print all the prime factors, obviously currently its just the rest modulo 2
-	{ in = "The prime factors of " + *input + " are " + *test; } + "echo".iosyscall;
+	{ in = "Prime factors: " + *test; } + "echo".iosyscall;
 	
 }
