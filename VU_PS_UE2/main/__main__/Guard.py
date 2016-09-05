@@ -59,7 +59,7 @@ class Guard(Component):
                     if(test[x] == '='):
                         equals = True
                     if(test[x] == '#'):
-                        not_equals = False
+                        not_equals = True
                     e1 = Expression(test[:x-1],self.getParent())
                     e1.setSyntaxOnly(self.syntax_only)
                     expIndex = x+2

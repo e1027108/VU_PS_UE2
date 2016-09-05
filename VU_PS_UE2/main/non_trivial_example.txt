@@ -24,25 +24,36 @@
 			[ rest = "-1" : 
 				^ rest;
 			]
+
+			[ rest # "0" :
+				plusOne = { in = *divisor + "+1"; } + "bc".iosyscall;
+				newDivisor = plusOne.out;
+				^ { dividend = *dividend; divisor = *newDivisor; } + *getSmallestPrimeFactor;
+			]
+
 			[ rest = "0" : 
 				^ divisor;
 			]
-			plusOne = { in = *divisor + "+1"; } + "bc".iosyscall;
-			newDivisor = plusOne.out;
-			^ { dividend = *dividend; divisor = *newDivisor; } + *getSmallestPrimeFactor;
+
 		} ;
 	
 		factors = "";
 		smallest = { dividend = *dividend; divisor = "2"; } + getSmallestPrimeFactor;
+		
 		result = { in = *dividend + "/" + *smallest; } + "bc".iosyscall;
 		result = result.out;
 		factors = factors + " " + smallest;
+		
+		[ result # "1" :
+			newFactors = { dividend = *result; divisor = "2"; } + *computePrimeFactors;
+			factors = factors + ", " + newFactors;
+			^ factors;
+		]
+		
 		[ result = "1" :
 			^ factors;
 		]
-		newFactors = { dividend = *result; divisor = "2"; } + *computePrimeFactors;
-		factors = factors + ", " + newFactors;
-		^ factors;
+
 	} ;
 
 	test = {dividend = *input;} + computePrimeFactors;
