@@ -109,7 +109,7 @@ class Command(Component):
                             for x in range (0,outerblock):
                                 curr = curr.getParent()
                             
-                            name = test[oPNI:oPNI+namelength-1].strip()
+                            name = test[oPNI+outerblock:oPNI+namelength-1].strip()
                         
                             if curr == self.getParent():
                                 if(namelength != 0 and self.isBlock(expressionString)): #must have found an assignment
