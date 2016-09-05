@@ -144,7 +144,7 @@ class Guard(Component):
                     else:
                         return 1
             elif(not_equals):
-                if(e1_comp_string != e2.getInput()):
+                if(e1_comp_string != e2_comp_string):
                     if(g.getInput() != ""):
                         return g.checkSyntax()
                     else:
