@@ -106,10 +106,11 @@ class Command(Component):
                     else:
                         if(not self.syntax_only):
                             curr = self.getParent()
-                            for x in range (0,outerblock):
-                                curr = curr.getParent()
+                            if outerblock > 0:
+                                for x in range (0,outerblock+self.getNested()): #TODO test nestedness
+                                    curr = curr.getParent()
                             
-                            name = test[oPNI+outerblock:oPNI+namelength-1].strip()
+                            name = test[oPNI+outerblock:oPNI+namelength-1].strip() 
                         
                             if curr == self.getParent():
                                 if(namelength != 0 and self.isBlock(expressionString)): #must have found an assignment
