@@ -10,6 +10,14 @@ class Block(Component):
     
     def __init__(self,input,parent):
         super(Block,self).__init__(input,parent)
+        self.nested = 0
+        
+    def getNested(self):
+        return self.nested
+    
+    #is this nested (0/1)?
+    def setNested(self,nest):
+        self.nested = nest
     
     def checkSyntax(self):
         test = self.getInput().strip()

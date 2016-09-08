@@ -106,9 +106,12 @@ class Command(Component):
                     else:
                         if(not self.syntax_only):
                             curr = self.getParent()
-                            if outerblock > 0:
-                                for x in range (0,outerblock+self.getNested()): #TODO test nestedness
+
+                            for x in range (0,outerblock):
+                                if curr.getParent() == 1:
                                     curr = curr.getParent()
+                                    print test[oPNI+outerblock:oPNI+namelength-1].strip() + " used nested! (c)"
+                                curr = curr.getParent()
                             
                             name = test[oPNI+outerblock:oPNI+namelength-1].strip() 
                         

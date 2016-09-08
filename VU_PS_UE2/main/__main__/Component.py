@@ -16,10 +16,6 @@ class Component(object):
         self.parent = parent # meaning the parent block
         self.property_list = PropertyList()
         self.syntax_only = False
-        if self.parent == None:
-            self.nested = 0
-        else:
-            self.nested = self.getParent().getNested()
     
     def setInput(self,input):
         self.input = input
@@ -35,13 +31,6 @@ class Component(object):
     
     def setSyntaxOnly(self,newvalue):
         self.syntax_only = newvalue
-        
-    def getNested(self):
-        return self.nested
-    
-    #is this nested (recursive) and needs more '*'?
-    def setNested(self,levels):
-        self.nested = levels
     
     @abc.abstractmethod
     def checkSyntax(self):
@@ -80,7 +69,7 @@ class Component(object):
             newBlock = Block(tmp,self)
             newBlock.setPropertyList(op1)
             newBlock.setSyntaxOnly(self.syntax_only)
-            newBlock.setNested(self.getNested()+1)
+            newBlock.setNested(1)
             newBlock.checkSyntax()
             return newBlock.getPropertyList()
         else:

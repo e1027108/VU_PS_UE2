@@ -214,11 +214,14 @@ class Expression(Component):
             parent = self.getParent() 
             if(nameIndex > -1):
   
+                #print name + ", ind: " + str(nameIndex) + ", nest: " + str(self.getNested())
                 
                 # get referred parent block
-               
                 for i in range(0, nameIndex):
-                    parent = parent.getParent()        
+                    if parent.getNested() == 1:
+                        parent = parent.getParent()
+                        print name + " used nested! (e)"
+                    parent = parent.getParent()
                     
                 name_helper = name.split(".")
                 
