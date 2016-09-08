@@ -220,8 +220,10 @@ class Expression(Component):
                 for i in range(0, nameIndex):
                     if parent.getNested() == 1:
                         parent = parent.getParent()
-                        print name + " used nested! (e)"
                     parent = parent.getParent()
+                
+                print "name: " + name
+                parent.getPropertyList().printList()
                     
                 name_helper = name.split(".")
                 

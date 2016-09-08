@@ -106,14 +106,17 @@ class Command(Component):
                     else:
                         if(not self.syntax_only):
                             curr = self.getParent()
+                            name = test[oPNI+outerblock:oPNI+namelength-1].strip() 
 
                             for x in range (0,outerblock):
-                                if curr.getParent() == 1:
+                                if curr.getNested() == 1:
                                     curr = curr.getParent()
                                     print test[oPNI+outerblock:oPNI+namelength-1].strip() + " used nested! (c)"
                                 curr = curr.getParent()
                             
-                            name = test[oPNI+outerblock:oPNI+namelength-1].strip() 
+                            if outerblock > 0:
+                                print "recursive: " + name + " (c)"
+                                curr = self.getBlockRecursively(curr,outerblock)
                         
                             if curr == self.getParent():
                                 if(namelength != 0 and self.isBlock(expressionString)): #must have found an assignment

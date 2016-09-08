@@ -66,7 +66,12 @@ class Component(object):
             if (len(op1.getDict()) == 1) and (self.isBlock(op1.getDict().values()[0])):
                 raise KeyError
             tmp = op2.getDict().values()[0]
-            newBlock = Block(tmp,self)
+            
+            if isinstance(self,Block):
+                newBlock = Block(tmp,self)
+            else:
+                newBlock = Block(tmp,self.getParent())
+                
             newBlock.setPropertyList(op1)
             newBlock.setSyntaxOnly(self.syntax_only)
             newBlock.setNested(1)
