@@ -107,7 +107,6 @@ class Expression(Component):
                         
                     if(self.previous != None):
                         stars = self.countStartOccurrences(part1,'*')
-                        #print part1 + ", stars: " + str(stars) + " (1)"
                         self.property_list = self.concatenate(self.previous, self.property_list, stars)
                         
                                          
@@ -119,8 +118,7 @@ class Expression(Component):
                     if (part2 in self.exec_list):
                             self.handleLinuxCommand(part2)
                     if(self.previous != None):
-                        stars = self.countStartOccurrences(part1,'*')
-                        #print part1 + ", stars: " + str(stars) + " (2)"
+                        stars = self.countStartOccurrences(part1,'*')                        
                         self.property_list = self.concatenate(self.previous, self.property_list, stars)
             
                 
@@ -221,11 +219,7 @@ class Expression(Component):
                 #print name + ", ind: " + str(nameIndex) + ", nest: " + str(self.getNested())
                 
                 # get referred parent block
-                for i in range(0, nameIndex):
-                    if parent.getNested() > 0:
-                        for j in range(0,parent.getNested()):
-                            parent = parent.getParent()
-                    parent = parent.getParent()
+                parent = self.escapeNestings(parent,nameIndex)
                 
                 #print "name: " + name
                 #parent.getPropertyList().printList()

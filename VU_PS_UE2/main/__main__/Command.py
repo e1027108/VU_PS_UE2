@@ -108,15 +108,7 @@ class Command(Component):
                             curr = self.getParent()
                             name = test[oPNI+outerblock:oPNI+namelength-1].strip() 
 
-                            for x in range (0,outerblock):
-                                if curr.getNested() > 0:
-                                    for y in range(0,curr.getNested()):
-                                        curr = curr.getParent()
-                                curr = curr.getParent()
-                            
-                            if outerblock > 0:
-                                print "recursive: " + name + " (c)"
-                                curr = self.getBlockRecursively(curr,outerblock)
+                            curr = self.escapeNestings(curr, outerblock)
                         
                             if curr == self.getParent():
                                 if(namelength != 0 and self.isBlock(expressionString)): #must have found an assignment

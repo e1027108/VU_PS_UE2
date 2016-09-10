@@ -71,13 +71,18 @@ class Component(object):
                 newBlock = Block(tmp,self)
             else:
                 newBlock = Block(tmp,self.getParent())
-                
+            
+            #print str(stars) + ":"
+            #print tmp
+            
             newBlock.setPropertyList(op1)
             newBlock.setSyntaxOnly(self.syntax_only)
             newBlock.setNested(stars)
             newBlock.checkSyntax()
             return newBlock.getPropertyList()
         else:
+            #print "op2:"
+            #op2.printList()
             return self.concatenatePropertyLists(op1, op2)
         
     def concatenatePropertyLists(self,op1,op2):
@@ -115,3 +120,16 @@ class Component(object):
                 return True
         else:
             return False
+        
+    def escapeNestings(self,curr,stars):
+        nested = 0
+        
+        for i in range(0, stars):
+            if i == (stars-1):
+                nested = curr.getNested()
+            curr = curr.getParent()
+        
+        if nested > 0:
+            curr = self.escapeNestings(curr, nested)
+                
+        return curr
