@@ -56,7 +56,7 @@ class Component(object):
     def getPropertyList(self):
         return self.property_list
     
-    def concatenate(self,op1,op2):
+    def concatenate(self,op1,op2,stars):
         
         from Block import Block
         
@@ -74,7 +74,7 @@ class Component(object):
                 
             newBlock.setPropertyList(op1)
             newBlock.setSyntaxOnly(self.syntax_only)
-            newBlock.setNested(1)
+            newBlock.setNested(stars)
             newBlock.checkSyntax()
             return newBlock.getPropertyList()
         else:

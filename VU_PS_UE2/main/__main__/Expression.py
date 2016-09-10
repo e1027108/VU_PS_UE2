@@ -106,7 +106,9 @@ class Expression(Component):
                     
                         
                     if(self.previous != None):
-                        self.property_list = self.concatenate(self.previous, self.property_list)
+                        stars = self.countStartOccurrences(part1,'*')
+                        #print part1 + ", stars: " + str(stars) + " (1)"
+                        self.property_list = self.concatenate(self.previous, self.property_list, stars)
                         
                                          
                 return True                    
@@ -116,8 +118,10 @@ class Expression(Component):
                 if(self.syntax_only == False):
                     if (part2 in self.exec_list):
                             self.handleLinuxCommand(part2)
-                    if(self.previous != None):                           
-                        self.property_list = self.concatenate(self.previous, self.property_list)
+                    if(self.previous != None):
+                        stars = self.countStartOccurrences(part1,'*')
+                        #print part1 + ", stars: " + str(stars) + " (2)"
+                        self.property_list = self.concatenate(self.previous, self.property_list, stars)
             
                 
                     e.previous = self.property_list
@@ -218,12 +222,13 @@ class Expression(Component):
                 
                 # get referred parent block
                 for i in range(0, nameIndex):
-                    if parent.getNested() == 1:
-                        parent = parent.getParent()
+                    if parent.getNested() > 0:
+                        for j in range(0,parent.getNested()):
+                            parent = parent.getParent()
                     parent = parent.getParent()
                 
-                print "name: " + name
-                parent.getPropertyList().printList()
+                #print "name: " + name
+                #parent.getPropertyList().printList()
                     
                 name_helper = name.split(".")
                 

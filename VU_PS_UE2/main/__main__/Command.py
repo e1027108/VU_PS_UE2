@@ -109,9 +109,9 @@ class Command(Component):
                             name = test[oPNI+outerblock:oPNI+namelength-1].strip() 
 
                             for x in range (0,outerblock):
-                                if curr.getNested() == 1:
-                                    curr = curr.getParent()
-                                    print test[oPNI+outerblock:oPNI+namelength-1].strip() + " used nested! (c)"
+                                if curr.getNested() > 0:
+                                    for y in range(0,curr.getNested()):
+                                        curr = curr.getParent()
                                 curr = curr.getParent()
                             
                             if outerblock > 0:
@@ -123,11 +123,15 @@ class Command(Component):
                                     curr.getPropertyList().addProperty(name,expressionString)
                                 else:
                                     curr.getPropertyList().addProperty(name,e.getPropertyList())
+                                    #print name + " (1)"
+                                    #e.getPropertyList().printList()
                             else:
                                 if(namelength != 0 and self.isBlock(expressionString)):
                                     curr.getPropertyList().changeProperty(name,expressionString)
                                 else:
                                     curr.getPropertyList().changeProperty(name,e.getPropertyList())
+                                    #print name + " (2)"
+                                    #e.getPropertyList().printList()
                         
                             outerblock = 0
                         
