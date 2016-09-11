@@ -5,52 +5,53 @@
 	input = "Please input a positive number to compute its prime factors!".userinput; %waits before checking sytax further?
 	%{ in = *input.userinput; } + "echo ".iosyscall;
 	
-	%computes all prime factors
+	%get the rest by modulo (takes: dividend, divisor)
+	computeRest = {
+		rest = { in = *dividend + "%" + *divisor; } + "bc".iosyscall;
+		[ rest.result = "0" : 
+			[ rest.err = "" : ^rest.out; ]
+		]
+		^ "-1"; %TODO do something with this
+	} ;
+	
+	%computes the smallest prime factor (takes: dividend, divisor)
+	getSmallestPrimeFactor = {
+		rest = { dividend = *dividend; divisor = *divisor; } + *computeRest;
+		[ rest = "-1" : 
+			^ rest;
+		]
+
+		[ rest # "0" :
+			plusOne = { in = *divisor + "+1"; } + "bc".iosyscall;
+			newDivisor = plusOne.out;
+			^ { dividend = *dividend; divisor = *newDivisor; } + *getSmallestPrimeFactor;
+		]
+
+		[ rest = "0" : 
+			^ divisor;
+		]
+	} ;
+	
+	%computes all prime factors (takes: dividend)
 	computePrimeFactors = {
-	
-		%computes (quite naively) the smallest prime factor
-		getSmallestPrimeFactor = {
-		
-			%get the rest by modulo
-			computeRest = {
-				rest = { in = *dividend + "%" + *divisor; } + "bc".iosyscall;
-				[ rest.result = "0" : 
-					[ rest.err = "" : ^rest.out; ]
-				]
-				^ "-1"; %TODO do something with this
-			} ;
-	
-			rest = { dividend = *dividend; divisor = *divisor; } + computeRest; %TODO **
-			[ rest = "-1" : 
-				^ rest;
-			]
-
-			[ rest # "0" :
-				plusOne = { in = *divisor + "+1"; } + "bc".iosyscall;
-				newDivisor = plusOne.out;
-				^ { dividend = *dividend; divisor = *newDivisor; } + *getSmallestPrimeFactor;
-			]
-
-			[ rest = "0" : 
-				^ divisor;
-			]
-
-		} ;
-	
 		factors = "";
-		smallest = { dividend = *dividend; divisor = "2"; } + getSmallestPrimeFactor;
+		smallest = { dividend = *dividend; divisor = "2"; } + *getSmallestPrimeFactor;
 		
 		result = { in = *dividend + "/" + *smallest; } + "bc".iosyscall;
 		result = result.out;
+		%{ in = *dividend + "/" + *smallest + "=" + *result ; } + "echo".iosyscall;
 		factors = factors + " " + smallest;
 		
-		[ result # "1" :
+		[ result # "1" : %TODO at *result = 18 above, it compares "1" to "1" here Oo
+			{ in = "test";} + "echo".iosyscall;
 			newFactors = { dividend = *result; divisor = "2"; } + *computePrimeFactors;
+			{ in = "new: " + *newFactors ; } + "echo".iosyscall;
 			factors = factors + ", " + newFactors;
 			^ factors;
 		]
 		
 		[ result = "1" :
+			factors = factors + ", " + result;
 			^ factors;
 		]
 
