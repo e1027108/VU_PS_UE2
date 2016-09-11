@@ -42,16 +42,13 @@
 		%{ in = *dividend + "/" + *smallest + "=" + *result ; } + "echo".iosyscall;
 		factors = factors + " " + smallest;
 		
-		[ result # "1" : %TODO at *result = 18 above, it compares "1" to "1" here Oo
-			{ in = "test";} + "echo".iosyscall;
+		[ result # "1" :
 			newFactors = { dividend = *result; divisor = "2"; } + *computePrimeFactors;
-			{ in = "new: " + *newFactors ; } + "echo".iosyscall;
 			factors = factors + ", " + newFactors;
 			^ factors;
 		]
 		
 		[ result = "1" :
-			factors = factors + ", " + result;
 			^ factors;
 		]
 

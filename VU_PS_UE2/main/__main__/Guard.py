@@ -108,7 +108,7 @@ class Guard(Component):
             
             e1_comp_string = '""'
             e2_comp_string = '""'
-
+            
             names = e1.getInput().split(".")
             if(len(e1.property_list.getDict()) > 0):
                 if((len(e1.property_list.getDict()) == 1) and e1.property_list.exists("string")):
@@ -116,7 +116,7 @@ class Guard(Component):
                         e1_comp_string = e1.property_list.getProperty("string")
                     elif(isinstance(e1.property_list.getProperty("string"),list)):
                         if(len(e1.property_list.getProperty("string")) > 0):
-                            e1_comp_string = e1.property_list.getProperty("string")[0]
+                            e1_comp_string = ''.join(e1.property_list.getProperty("string"))
                 else:
                     prop = e1.property_list.getProperty(e1.getInput())
                     e1_comp_string = prop
@@ -136,7 +136,7 @@ class Guard(Component):
                     e2_comp_string = '"' + e2_comp_string[0] + '"'
                 if (e2_comp_string == ""):
                     e2_comp_string = '""'
-                            
+                 
             if(equals):
                 if(e1_comp_string == e2_comp_string):
                     if(g.getInput() != ""):
