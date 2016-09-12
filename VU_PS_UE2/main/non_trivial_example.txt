@@ -34,6 +34,18 @@
 	
 	%computes all prime factors (takes: dividend)
 	computePrimeFactors = {
+		negative = {} + ("test 1 -ge " + dividend).syscall;
+	
+		[ negative = "0" :
+			[ dividend = "1" :
+				^ "none";
+			]
+			^ "none because zero or negative";
+		]
+		[ negative = "2" :
+			^ "invalid input";
+		]
+	
 		factors = "";
 		smallest = { dividend = *dividend; divisor = "2"; } + *getSmallestPrimeFactor;
 		
