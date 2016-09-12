@@ -40,6 +40,8 @@ class Expression(Component):
         
         part2 = None
         
+        names_array = None
+        
         for x in range(0, len(test)):
             if (test[x] == '"'):
                 if (stringOpen == False):
@@ -67,20 +69,22 @@ class Expression(Component):
                     # this is a name starting with .
                     if (nameIndex == 0):
                         part1 = test[nameIndex:x]
-                    part2 = test[x+1:]
+                        part2 = test[x+1:]
+                        names_array = [part2]
                     if " " in part2:
                         spaceIndex = part2.find(" ")
                         print ("There is a ';' missing at Index " + str(len(part1) + spaceIndex) + " in the name part of Expression:"  + test)
                         return False
                     if "." in part2:
-                        dotIndex = part2.find(".")
-                        if(len(part2) < dotIndex+1):
-                            if (part2[dotIndex+1].isalpha()):
-                                part2 = part2[:dotIndex]  
-                        else:
+                        names_array = part2.split(".")
+                        for n in names_array:
+                            if (len(n) > 0 and n[1].isalpha() and names):
+                                names = self.checkName(n)
+                        if (not names):
                             print("There is a misplaced '.' in the name variable. This is an invalid Expression: " + test)
-                            return False                          
-                    names = self.checkName(part2)
+                            return False 
+                            
+                        part2 = names_array[0]   
                     nameIndex = x+1
                 elif(test[x] == '+' and expIndex == 0):
                     # optional expression
@@ -96,14 +100,19 @@ class Expression(Component):
         #    self.property_list = self.concatenate(self.previous, self.property_list)
         
         if (expIndex == 0):
-            #return (self.checkPart1(part1) and names)
-            if(not(part2 in self.exec_list) and part2 != None):
-                part1 = test
             if(self.checkPart1(part1) and names):
                 if(self.syntax_only == False):
-                    if (part2 in self.exec_list):
-                        self.handleLinuxCommand(part2)
-                    
+                    if(names_array != None):
+                        for n in names_array:
+                            if (n in self.exec_list):
+                                self.handleLinuxCommand(n)
+                            else:
+                                if '"' in part1:
+                                    from StringList import StringList
+                                    self.property_list = StringList(str(self.property_list.getProperty(n)))
+                                else:
+                                    from StringList import StringList
+                                    self.property_list = StringList(str(self.property_list.getProperty(part1.lstrip('*') + "." + n)))
                         
                     if(self.previous != None):
                         stars = self.countStartOccurrences(part1,'*')
@@ -112,11 +121,20 @@ class Expression(Component):
                                          
                 return True                    
         else:
-            #return (self.checkPart1(part1) and names and e.checkSyntax())
             if(self.checkPart1(part1)):
                 if(self.syntax_only == False):
-                    if (part2 in self.exec_list):
-                            self.handleLinuxCommand(part2)
+                    if(names_array != None):
+                        for n in names_array:
+                            if (n in self.exec_list):
+                                self.handleLinuxCommand(n)
+                            else:
+                                if '"' in part1:
+                                    from StringList import StringList
+                                    self.property_list = StringList(str(self.property_list.getProperty(n)))
+                                else:
+                                    from StringList import StringList
+                                    self.property_list = StringList(str(self.property_list.getProperty(part1.lstrip('*') + "." + n)))
+                                
                     if(self.previous != None):
                         stars = self.countStartOccurrences(part1,'*')                        
                         self.property_list = self.concatenate(self.previous, self.property_list, stars)
@@ -127,12 +145,8 @@ class Expression(Component):
                     if(self.syntax_only == False):
                         if (part2 in self.exec_list):
                             self.handleLinuxCommand(part2)
-                        #self.property_list = self.concatenate(self.property_list, e.getPropertyList())
-                        #self.property_list = self.concatenate(self.property_list, e.getPropertyList())
-                        self.property_list = e.getPropertyList()
-                        
-                    return True                
-                
+                        self.property_list = e.getPropertyList()                        
+                    return True
         return False               
 
         
@@ -183,7 +197,6 @@ class Expression(Component):
         
         if(self.syntax_only == False):
             test = '"' + test + '"'
-            ########self.property_list.addProperty("stringliteral", test)
             from StringList import StringList
             self.property_list = StringList(test[1:-1])
         return True
@@ -224,40 +237,17 @@ class Expression(Component):
                 #print "name: " + name
                 #parent.getPropertyList().printList()
                     
-                name_helper = name.split(".")
-                
-                if (len(name_helper) > 1):
-                    for i in range(0, len(name_helper)-1):
-                        if(parent.property_list.exists(name_helper[i])):
-                            prop = parent.property_list.getProperty(name_helper[i])
-                           
-                            from PropertyList import PropertyList
-                                
-                            if(isinstance(prop, PropertyList)):
-                                parent = prop
-                            else:
-                                return False
-                            
-                    if(parent.exists(name_helper[len(name_helper)-1])):
-                        #self.property_list.addProperty(name, parent.getProperty(name_helper[len(name_helper)-1]))
-                        #self.property_list.addProperty("string", parent.getProperty(name_helper[len(name_helper)-1]))
-                        from StringList import StringList
-                        self.property_list = StringList(str(parent.getProperty(name_helper[len(name_helper)-1])))
-                        return True
+               
+                if(parent.property_list.exists(name)):
+                    from StringList import StringList
+                    if(isinstance(parent.getPropertyList().getProperty(name),StringList)):
+                        self.property_list = StringList(parent.getPropertyList().getProperty(name).printString())
                     else:
-                        return False
-                
+                        self.property_list.addProperty(name,parent.getPropertyList().getProperty(name))
+                    return True
                 else:
-                    if(parent.property_list.exists(name)):
-                        from StringList import StringList
-                        if(isinstance(parent.getPropertyList().getProperty(name),StringList)):
-                            self.property_list = StringList(parent.getPropertyList().getProperty(name).printString())
-                        else:
-                            self.property_list.addProperty(name,parent.getPropertyList().getProperty(name))
-                        return True
-                    else:
-                        self.property_list.addProperty(name,"")
-                        return True
+                    self.property_list.addProperty(name,"")
+                    return True
         return True
                         
            

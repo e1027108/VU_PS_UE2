@@ -27,7 +27,13 @@ class PropertyList:
         del self.property_dict[name]        
     
     def getProperty(self,name):
-        return self.property_dict[name]
+        names_array = name.split(".")
+        if (len(names_array) > 0):
+            prop = self
+            for n in names_array:
+                prop = prop.property_dict[n]
+            return prop
+        raise KeyError #TODO means code in our language is faulty, someone should really catch that
     
     def exists(self,name):
         return (name in self.property_dict)
