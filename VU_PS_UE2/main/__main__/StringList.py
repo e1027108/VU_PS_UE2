@@ -81,12 +81,12 @@ class StringList(PropertyList, object):
     
     #directly filled as a property of the string, called as ".length"
     def stringLength(self):
-        self.property_dict.update({"length",len(self.getProperty("string"))})
+        self.property_dict.update({"length":len(self.getProperty("string"))})
     
     #removing leading and trailing spaces, newlines and tabs, called as ".trim"
     def trim(self):
         trimmed = ''.join(self.getProperty("string")).strip()
-        self.property_dict.update({"trim",trimmed})
+        self.property_dict.update({"trim":trimmed})
         
     #checks whether string is numeric, writes 0 or 1 into "isnumeric", called as ".isnumeric"
     def isnumeric(self):
@@ -96,4 +96,4 @@ class StringList(PropertyList, object):
             isnumeric = 1
         elif (string[0] == '-') and string[1:].isdigit():
             isnumeric = 1
-        self.property_dict.update({"isnumeric",isnumeric})
+        self.property_dict.update({"isnumeric":isnumeric})

@@ -118,7 +118,12 @@ class Guard(Component):
                         if(len(e1.property_list.getProperty("string")) > 0):
                             e1_comp_string = ''.join(e1.property_list.getProperty("string"))
                 else:
-                    prop = e1.property_list.getProperty(e1.getInput())
+                    if(len(names) > 1):
+                        prop = e1.property_list
+                        for n in names[1:]:
+                            prop = prop.getProperty(n)
+                    else:
+                        prop = e1.property_list.getProperty(e1.getInput())
                     e1_comp_string = prop
 
                 if(isinstance(e1_comp_string, StringList)):
@@ -126,14 +131,19 @@ class Guard(Component):
                     
                 if (isinstance(e1_comp_string, int)):
                     e1_comp_string = '"' + str(e1_comp_string) + '"'
+                elif(isinstance(e1_comp_string, basestring) and not '"' in e1_comp_string):
+                    e1_comp_string = '"' + str(e1_comp_string) + '"'
                 else:
                     if(e1_comp_string != '""'):
                         e1_comp_string = '"' + e1_comp_string + '"'
                      
             if(len(e2.getPropertyList().getDict()) > 0):
-                e2_comp_string = e2.getPropertyList().getProperty("string")
+                if(isinstance(e2.property_list, StringList)):
+                    e2_comp_string = '"' + e2.property_list.printString() + '"'
+                else:
+                    e2_comp_string = e2.getPropertyList().getProperty("string")         
                 if (isinstance(e2_comp_string, list)):
-                    e2_comp_string = '"' + e2_comp_string[0] + '"'
+                    e2_comp_string = '"' + e2_comp_string[0] + '"'                
                 if (e2_comp_string == ""):
                     e2_comp_string = '""'
                  

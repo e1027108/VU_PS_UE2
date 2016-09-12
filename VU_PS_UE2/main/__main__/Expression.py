@@ -78,7 +78,7 @@ class Expression(Component):
                     if "." in part2:
                         names_array = part2.split(".")
                         for n in names_array:
-                            if (len(n) > 0 and n[1].isalpha() and names):
+                            if (len(n) > 1 and n[1].isalpha() and names):
                                 names = self.checkName(n)
                         if (not names):
                             print("There is a misplaced '.' in the name variable. This is an invalid Expression: " + test)
@@ -275,9 +275,9 @@ class Expression(Component):
                 inputList = self.property_list.promptUserInput(self.property_list.printString())
                 self.property_list = inputList
             if(part2 == "length"):
-                self.property_list.stringLength(self.property_list.printString())
+                self.property_list.stringLength()
             if(part2 == "trim"):
-                self.property_list.trim(self.property_list.printString())
+                self.property_list.trim()
             if(part2 == "isnumeric"):
-                self.property_list.isnumeric(self.property_list.printString())
+                self.property_list.isnumeric()
                 
