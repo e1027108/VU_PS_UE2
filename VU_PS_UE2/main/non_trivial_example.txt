@@ -49,8 +49,8 @@
 		factors = "";
 		smallest = { dividend = *dividend; divisor = "2"; } + *getSmallestPrimeFactor;
 		
-		result = { in = *dividend + "/" + *smallest; } + "bc".iosyscall;
-		result = result.out;
+		result = { in = *dividend + "/" + *smallest; } + "bc".iosyscall.out;
+		%result = result.out;
 		%{ in = *dividend + "/" + *smallest + "=" + *result ; } + "echo".iosyscall;
 		factors = factors + " " + smallest;
 		
