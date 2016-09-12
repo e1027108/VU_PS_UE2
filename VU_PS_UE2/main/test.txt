@@ -1,0 +1,21 @@
+{
+	%This should print "   abc   x" (9 + 1 symbols)
+	test0 = "   abc   ";
+	{ in = *test0 + "x"; } + "echo".iosyscall;
+
+	%This should print "18a"
+	test1 = "     testString1     ".length;
+	{ in = *test1 + "a"; } + "echo".iosyscall;
+	
+	%This should print "testString2b"
+	test2 = "     testString2     ".trim;
+	{ in = *test2 + "b"; } + "echo".iosyscall;
+	
+	%This should print "0c"
+	test3 = "abc".isnumeric;
+	{ in = *test3 + "c"; } + "echo".iosyscall;
+	
+	%This should print "1d"
+	test4 = "111".isnumeric;
+	{ in = *test4 + "d"; } + "echo".iosyscall;
+}
