@@ -3,7 +3,6 @@
 {
 	%read userinput (needs a second line break?)
 	input = "Please input a positive number to compute its prime factors!".userinput; %waits before checking sytax further?
-	%{ in = *input.userinput; } + "echo ".iosyscall;
 	
 	%get the rest by modulo (takes: dividend, divisor)
 	computeRest = {
@@ -67,6 +66,7 @@
 	} ;
 
 	test = {dividend = *input;} + computePrimeFactors;
-	{ in = "Prime factors: " + *test; } + "echo".iosyscall;
+	%{ in = "Prime factors: " + *test; } + "echo".iosyscall;
+	("Prime factors: " + test).print;
 	
 }
