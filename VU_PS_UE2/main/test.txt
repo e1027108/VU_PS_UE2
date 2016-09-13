@@ -18,4 +18,9 @@
 	%This should print "1d"
 	test4 = "111".isnumeric;
 	{ in = *test4 + "d"; } + "echo".iosyscall;
+	
+	%This should print "mmmh, donuts" twice
+	test5 = "mmmh, donuts";
+	test5.print;
+	"mmmh, donuts".print;
 }

@@ -10,7 +10,7 @@ class Expression(Component):
     
     def __init__(self,input,parent):
         self.previous = None
-        self.exec_list = {"syscall", "iosyscall", "userinput", "length", "trim", "isnumeric"}
+        self.exec_list = {"syscall", "iosyscall", "userinput", "length", "trim", "isnumeric", "print"}
         super(Expression,self).__init__(input,parent)
         
     def setPrevious(self, prop_list):
@@ -280,4 +280,5 @@ class Expression(Component):
                 self.property_list.trim()
             if(part2 == "isnumeric"):
                 self.property_list.isnumeric()
-                
+            if(part2 == "print"):
+                self.property_list.handlePrintCommand()

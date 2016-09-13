@@ -97,3 +97,6 @@ class StringList(PropertyList, object):
         elif (string[0] == '-') and string[1:].isdigit():
             isnumeric = 1
         self.property_dict.update({"string":isnumeric})
+        
+    def handlePrintCommand(self):
+        print ''.join(self.getProperty("string"))
